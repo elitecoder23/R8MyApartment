@@ -1,0 +1,136 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".RoommateFinderActivity">
+
+    <View
+        android:id="@+id/topBackground"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:background="#03A9F4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CyFinder"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/notifications_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/notification"
+            android:layout_marginTop="-10dp"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/settings"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/take_quiz_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Quiz To get Roommate Recommendations!"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/topBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <Button
+        android:id="@+id/sendNewReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find New Friends!"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/take_quiz_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/sendNewReq"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/recommended_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friends"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginTop="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/recommended_roommates_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommended Roommates"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginTop="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_roommates_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:padding="10dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

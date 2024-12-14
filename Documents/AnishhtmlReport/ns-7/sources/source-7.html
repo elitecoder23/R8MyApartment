@@ -1,0 +1,426 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RoommateMatchingService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: RoommateMatchingService (mk12.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoommateMatchingService</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (2/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.8%
+  </span>
+  <span class="absValue">
+    (4/141)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">RoommateMatchingService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (2/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.8%
+  </span>
+  <span class="absValue">
+    (4/141)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.dto.MatchResultDTO;
+&nbsp;import mk12.dto.QuizSubmissionDTO;
+&nbsp;import mk12.model.QuizResponse;
+&nbsp;import mk12.repository.IQuizRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+&nbsp;public class RoommateMatchingService {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(RoommateMatchingService.class);</b>
+&nbsp;
+&nbsp;    private final IQuizRepository quizRepository;
+&nbsp;    private final NvidiaAIService nvidiaAIService;
+&nbsp;
+&nbsp;    // Constants for traditional matching weights (used as fallback)
+&nbsp;    private static final int SMOKING_WEIGHT = 25;
+&nbsp;    private static final int CLEANLINESS_WEIGHT = 20;
+&nbsp;    private static final int NOISE_WEIGHT = 15;
+&nbsp;    private static final int HOSTING_WEIGHT = 10;
+&nbsp;    private static final int MORNING_WEIGHT = 10;
+&nbsp;    private static final int ORGANIZATION_WEIGHT = 10;
+&nbsp;    private static final int PETS_WEIGHT = 5;
+&nbsp;    private static final int PEOPLE_OVER_WEIGHT = 5;
+&nbsp;
+<b class="fc">&nbsp;    public RoommateMatchingService(IQuizRepository quizRepository, NvidiaAIService nvidiaAIService) {</b>
+<b class="fc">&nbsp;        this.quizRepository = quizRepository;</b>
+<b class="fc">&nbsp;        this.nvidiaAIService = nvidiaAIService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Submits a new quiz response for a user
+&nbsp;     */
+&nbsp;    public void submitQuiz(QuizSubmissionDTO submission) {
+<b class="nc">&nbsp;        logger.info(&quot;Submitting quiz for user: {}&quot;, submission.getUsername());</b>
+&nbsp;
+&nbsp;        // Check if username already exists
+<b class="nc">&nbsp;        quizRepository.findByUsername(submission.getUsername()).ifPresent(existing -&gt; {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Quiz already exists for username: {}&quot;, submission.getUsername());</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Quiz already exists for username: &quot; + submission.getUsername());</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            QuizResponse response = new QuizResponse();</b>
+<b class="nc">&nbsp;            response.setUsername(submission.getUsername());</b>
+<b class="nc">&nbsp;            response.setMorningPerson(validateScore(submission.getMorningPerson()));</b>
+<b class="nc">&nbsp;            response.setHosting(validateScore(submission.getHosting()));</b>
+<b class="nc">&nbsp;            response.setLikingPets(validateScore(submission.getLikingPets()));</b>
+<b class="nc">&nbsp;            response.setSmoking(validateScore(submission.getSmoking()));</b>
+<b class="nc">&nbsp;            response.setOrganizationSkills(validateScore(submission.getOrganizationSkills()));</b>
+<b class="nc">&nbsp;            response.setPeopleOver(validateScore(submission.getPeopleOver()));</b>
+<b class="nc">&nbsp;            response.setNoiseLevel(validateScore(submission.getNoiseLevel()));</b>
+<b class="nc">&nbsp;            response.setCleanliness(validateScore(submission.getCleanliness()));</b>
+&nbsp;
+<b class="nc">&nbsp;            quizRepository.save(response);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Quiz submitted successfully for user: {}&quot;, submission.getUsername());</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error submitting quiz for user: {}&quot;, submission.getUsername(), e);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Error submitting quiz: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds all potential matches for a given user
+&nbsp;     */
+&nbsp;    public List&lt;MatchResultDTO&gt; findMatches(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Finding matches for user: {}&quot;, username);</b>
+&nbsp;
+&nbsp;        // Get the user&#39;s quiz response
+<b class="nc">&nbsp;        QuizResponse userResponse = quizRepository.findByUsername(username)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="nc">&nbsp;                    logger.error(&quot;Quiz response not found for username: {}&quot;, username);</b>
+<b class="nc">&nbsp;                    return new RuntimeException(&quot;Quiz response not found for username: &quot; + username);</b>
+&nbsp;                });
+&nbsp;
+&nbsp;        // Get all other responses
+<b class="nc">&nbsp;        List&lt;QuizResponse&gt; potentialMatches = quizRepository.findByUsernameNot(username);</b>
+<b class="nc">&nbsp;        List&lt;MatchResultDTO&gt; matches = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizSubmissionDTO userDTO = convertToDTO(userResponse);</b>
+&nbsp;
+<b class="nc">&nbsp;        for (QuizResponse potentialMatch : potentialMatches) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                QuizSubmissionDTO matchDTO = convertToDTO(potentialMatch);</b>
+&nbsp;
+&nbsp;                // Use AI service to calculate compatibility
+<b class="nc">&nbsp;                double compatibilityScore = nvidiaAIService.calculateCompatibilityScore(userDTO, matchDTO);</b>
+&nbsp;
+<b class="nc">&nbsp;                MatchResultDTO result = new MatchResultDTO();</b>
+<b class="nc">&nbsp;                result.setUsername(potentialMatch.getUsername());</b>
+<b class="nc">&nbsp;                result.setStarRating(convertToStarRating(compatibilityScore));</b>
+<b class="nc">&nbsp;                result.setMatchedUserProfile(matchDTO);</b>
+&nbsp;
+<b class="nc">&nbsp;                matches.add(result);</b>
+<b class="nc">&nbsp;                logger.debug(&quot;Calculated match score {} between {} and {}&quot;,</b>
+<b class="nc">&nbsp;                        compatibilityScore, username, potentialMatch.getUsername());</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                logger.error(&quot;Error calculating match for users {} and {}&quot;,</b>
+<b class="nc">&nbsp;                        username, potentialMatch.getUsername(), e);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Sort by compatibility score descending
+<b class="nc">&nbsp;        matches.sort((a, b) -&gt; Double.compare(b.getStarRating(), a.getStarRating()));</b>
+<b class="nc">&nbsp;        logger.info(&quot;Found {} potential matches for user: {}&quot;, matches.size(), username);</b>
+<b class="nc">&nbsp;        return matches;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates match between two specific users
+&nbsp;     */
+&nbsp;    public MatchResultDTO calculateSingleMatch(String username1, String username2) {
+<b class="nc">&nbsp;        logger.info(&quot;Calculating match between users: {} and {}&quot;, username1, username2);</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizResponse user1Response = quizRepository.findByUsername(username1)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Quiz response not found for username: &quot; + username1));</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizResponse user2Response = quizRepository.findByUsername(username2)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Quiz response not found for username: &quot; + username2));</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizSubmissionDTO user1DTO = convertToDTO(user1Response);</b>
+<b class="nc">&nbsp;        QuizSubmissionDTO user2DTO = convertToDTO(user2Response);</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            double compatibilityScore = nvidiaAIService.calculateCompatibilityScore(user1DTO, user2DTO);</b>
+&nbsp;
+<b class="nc">&nbsp;            MatchResultDTO result = new MatchResultDTO();</b>
+<b class="nc">&nbsp;            result.setUsername(username2);</b>
+<b class="nc">&nbsp;            result.setStarRating(convertToStarRating(compatibilityScore));</b>
+<b class="nc">&nbsp;            result.setMatchedUserProfile(user2DTO);</b>
+&nbsp;
+<b class="nc">&nbsp;            logger.info(&quot;Successfully calculated match between users with score: {}&quot;, compatibilityScore);</b>
+<b class="nc">&nbsp;            return result;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error calculating match between users&quot;, e);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Error calculating match: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a quiz submission for a specific user
+&nbsp;     */
+&nbsp;    public QuizSubmissionDTO getQuizSubmissionByUsername(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving quiz submission for user: {}&quot;, username);</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizResponse response = quizRepository.findByUsername(username)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Quiz response not found for username: &quot; + username));</b>
+<b class="nc">&nbsp;        return convertToDTO(response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a quiz submission for a specific user
+&nbsp;     */
+&nbsp;    public boolean deleteQuizSubmissionByUsername(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Deleting quiz submission for user: {}&quot;, username);</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            QuizResponse response = quizRepository.findByUsername(username)</b>
+<b class="nc">&nbsp;                    .orElseThrow(() -&gt; new RuntimeException(&quot;Quiz response not found for username: &quot; + username));</b>
+<b class="nc">&nbsp;            quizRepository.delete(response);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully deleted quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error deleting quiz submission for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates a quiz submission for a specific user
+&nbsp;     */
+&nbsp;    public QuizSubmissionDTO updateQuizSubmissionByUsername(String username, QuizSubmissionDTO updatedSubmission) {
+<b class="nc">&nbsp;        logger.info(&quot;Updating quiz submission for user: {}&quot;, username);</b>
+&nbsp;
+<b class="nc">&nbsp;        QuizResponse response = quizRepository.findByUsername(username)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Quiz response not found for username: &quot; + username));</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            response.setMorningPerson(validateScore(updatedSubmission.getMorningPerson()));</b>
+<b class="nc">&nbsp;            response.setHosting(validateScore(updatedSubmission.getHosting()));</b>
+<b class="nc">&nbsp;            response.setLikingPets(validateScore(updatedSubmission.getLikingPets()));</b>
+<b class="nc">&nbsp;            response.setSmoking(validateScore(updatedSubmission.getSmoking()));</b>
+<b class="nc">&nbsp;            response.setOrganizationSkills(validateScore(updatedSubmission.getOrganizationSkills()));</b>
+<b class="nc">&nbsp;            response.setPeopleOver(validateScore(updatedSubmission.getPeopleOver()));</b>
+<b class="nc">&nbsp;            response.setNoiseLevel(validateScore(updatedSubmission.getNoiseLevel()));</b>
+<b class="nc">&nbsp;            response.setCleanliness(validateScore(updatedSubmission.getCleanliness()));</b>
+&nbsp;
+<b class="nc">&nbsp;            QuizResponse updatedResponse = quizRepository.save(response);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully updated quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            return convertToDTO(updatedResponse);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error updating quiz submission for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Error updating quiz submission: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts a quiz score to star rating
+&nbsp;     */
+&nbsp;    private double convertToStarRating(double matchScore) {
+<b class="nc">&nbsp;        if (matchScore &gt;= 90) return 5.0;</b>
+<b class="nc">&nbsp;        if (matchScore &gt;= 75) return 4.0;</b>
+<b class="nc">&nbsp;        if (matchScore &gt;= 60) return 3.0;</b>
+<b class="nc">&nbsp;        if (matchScore &gt;= 45) return 2.0;</b>
+<b class="nc">&nbsp;        if (matchScore &gt;= 30) return 1.0;</b>
+<b class="nc">&nbsp;        return 0.0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts QuizResponse to DTO
+&nbsp;     */
+&nbsp;    private QuizSubmissionDTO convertToDTO(QuizResponse response) {
+<b class="nc">&nbsp;        QuizSubmissionDTO dto = new QuizSubmissionDTO();</b>
+<b class="nc">&nbsp;        dto.setUsername(response.getUsername());</b>
+<b class="nc">&nbsp;        dto.setMorningPerson(response.getMorningPerson());</b>
+<b class="nc">&nbsp;        dto.setHosting(response.getHosting());</b>
+<b class="nc">&nbsp;        dto.setLikingPets(response.getLikingPets());</b>
+<b class="nc">&nbsp;        dto.setSmoking(response.getSmoking());</b>
+<b class="nc">&nbsp;        dto.setOrganizationSkills(response.getOrganizationSkills());</b>
+<b class="nc">&nbsp;        dto.setPeopleOver(response.getPeopleOver());</b>
+<b class="nc">&nbsp;        dto.setNoiseLevel(response.getNoiseLevel());</b>
+<b class="nc">&nbsp;        dto.setCleanliness(response.getCleanliness());</b>
+<b class="nc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Validates that a score is between 0 and 10
+&nbsp;     */
+&nbsp;    private int validateScore(int score) {
+<b class="nc">&nbsp;        if (score &lt; 0 || score &gt; 10) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Score must be between 0 and 10&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return score;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Fallback method for calculating traditional match score
+&nbsp;     * Used when AI service is unavailable
+&nbsp;     */
+&nbsp;    private double calculateTraditionalMatchScore(QuizSubmissionDTO user1, QuizSubmissionDTO user2) {
+<b class="nc">&nbsp;        double totalScore = 0;</b>
+<b class="nc">&nbsp;        double maxPossibleScore = 0;</b>
+&nbsp;
+&nbsp;        // Smoking compatibility (highest weight due to health implications)
+<b class="nc">&nbsp;        int smokingDiff = Math.abs(user1.getSmoking() - user2.getSmoking());</b>
+<b class="nc">&nbsp;        totalScore += (10 - smokingDiff) * SMOKING_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * SMOKING_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Cleanliness compatibility
+<b class="nc">&nbsp;        int cleanlinessDiff = Math.abs(user1.getCleanliness() - user2.getCleanliness());</b>
+<b class="nc">&nbsp;        totalScore += (10 - cleanlinessDiff) * CLEANLINESS_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * CLEANLINESS_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Noise level compatibility
+<b class="nc">&nbsp;        int noiseDiff = Math.abs(user1.getNoiseLevel() - user2.getNoiseLevel());</b>
+<b class="nc">&nbsp;        totalScore += (10 - noiseDiff) * NOISE_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * NOISE_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Hosting compatibility
+<b class="nc">&nbsp;        int hostingDiff = Math.abs(user1.getHosting() - user2.getHosting());</b>
+<b class="nc">&nbsp;        totalScore += (10 - hostingDiff) * HOSTING_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * HOSTING_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Morning person compatibility
+<b class="nc">&nbsp;        int morningDiff = Math.abs(user1.getMorningPerson() - user2.getMorningPerson());</b>
+<b class="nc">&nbsp;        totalScore += (10 - morningDiff) * MORNING_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * MORNING_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Organization compatibility
+<b class="nc">&nbsp;        int organizationDiff = Math.abs(user1.getOrganizationSkills() - user2.getOrganizationSkills());</b>
+<b class="nc">&nbsp;        totalScore += (10 - organizationDiff) * ORGANIZATION_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * ORGANIZATION_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Pets compatibility
+<b class="nc">&nbsp;        int petsDiff = Math.abs(user1.getLikingPets() - user2.getLikingPets());</b>
+<b class="nc">&nbsp;        totalScore += (10 - petsDiff) * PETS_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * PETS_WEIGHT;</b>
+&nbsp;
+&nbsp;        // People over compatibility
+<b class="nc">&nbsp;        int peopleDiff = Math.abs(user1.getPeopleOver() - user2.getPeopleOver());</b>
+<b class="nc">&nbsp;        totalScore += (10 - peopleDiff) * PEOPLE_OVER_WEIGHT;</b>
+<b class="nc">&nbsp;        maxPossibleScore += 10 * PEOPLE_OVER_WEIGHT;</b>
+&nbsp;
+&nbsp;        // Convert to percentage
+<b class="nc">&nbsp;        return (totalScore / maxPossibleScore) * 100;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

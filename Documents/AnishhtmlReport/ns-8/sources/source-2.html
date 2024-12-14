@@ -1,0 +1,87 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FriendRequestRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: FriendRequestRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">FriendRequestRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.FriendRequest;
+&nbsp;import org.springframework.data.repository.CrudRepository;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for FriendRequest entities.
+&nbsp; * Provides CRUD operations and a method to find friend requests by the receiver&#39;s username.
+&nbsp; */
+&nbsp;public interface FriendRequestRepository extends CrudRepository&lt;FriendRequest, Long&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a list of friend requests by the receiver&#39;s username.
+&nbsp;     *
+&nbsp;     * @param username the username of the receiver
+&nbsp;     * @return a list of friend requests received by the specified username
+&nbsp;     */
+&nbsp;    List&lt;FriendRequest&gt; findByReceiver_Username(String username);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

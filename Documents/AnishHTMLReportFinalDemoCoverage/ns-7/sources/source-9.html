@@ -1,0 +1,231 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OwnerReportService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: OwnerReportService (mk12.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OwnerReportService</td>
+<td class="coverageStat">
+  <span class="percent">
+    22.2%
+  </span>
+  <span class="absValue">
+    (2/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.7%
+  </span>
+  <span class="absValue">
+    (4/46)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OwnerReportService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    22.2%
+  </span>
+  <span class="absValue">
+    (2/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.7%
+  </span>
+  <span class="absValue">
+    (4/46)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.dto.ReportDTO;
+&nbsp;import mk12.model.Report;
+&nbsp;import mk12.repository.IReportRepository;
+&nbsp;import mk12.repository.IApartmentOwnerRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+&nbsp;public class OwnerReportService {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(OwnerReportService.class);</b>
+&nbsp;
+&nbsp;    private final IReportRepository reportRepository;
+&nbsp;    private final IApartmentOwnerRepository ownerRepository;
+&nbsp;
+&nbsp;    public OwnerReportService(IReportRepository reportRepository,
+<b class="fc">&nbsp;                              IApartmentOwnerRepository ownerRepository) {</b>
+<b class="fc">&nbsp;        this.reportRepository = reportRepository;</b>
+<b class="fc">&nbsp;        this.ownerRepository = ownerRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ReportDTO&gt; getReportsByOwner(String ownerEmail) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving all reports for owner: {}&quot;, ownerEmail);</b>
+<b class="nc">&nbsp;        validateOwner(ownerEmail);</b>
+<b class="nc">&nbsp;        return reportRepository.findByApartmentOwnerEmail(ownerEmail).stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ReportDTO&gt; getPendingReportsByOwner(String ownerEmail) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving pending reports for owner: {}&quot;, ownerEmail);</b>
+<b class="nc">&nbsp;        validateOwner(ownerEmail);</b>
+<b class="nc">&nbsp;        return reportRepository.findByApartmentOwnerEmailAndStatus(</b>
+&nbsp;                        ownerEmail, Report.ReportStatus.PENDING)
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ReportDTO addOwnerResponse(Long reportId, String ownerEmail, String response) {
+<b class="nc">&nbsp;        logger.info(&quot;Adding owner response to report ID: {}&quot;, reportId);</b>
+<b class="nc">&nbsp;        validateOwner(ownerEmail);</b>
+&nbsp;
+<b class="nc">&nbsp;        Report report = reportRepository.findById(reportId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Report not found&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        if (!report.getApartment().getOwner().getEmail().equals(ownerEmail)) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Unauthorized to respond to this report&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        report.setOwnerResponse(response);</b>
+<b class="nc">&nbsp;        report.setStatus(Report.ReportStatus.REVIEWED);</b>
+&nbsp;
+<b class="nc">&nbsp;        return convertToDTO(reportRepository.save(report));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ReportDTO&gt; getReportsByOwnerAndStatus(String ownerEmail, Report.ReportStatus status) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving reports for owner: {} with status: {}&quot;, ownerEmail, status);</b>
+<b class="nc">&nbsp;        validateOwner(ownerEmail);</b>
+<b class="nc">&nbsp;        return reportRepository.findByApartmentOwnerEmailAndStatus(ownerEmail, status)</b>
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ReportDTO&gt; getReportsByApartmentAndOwner(String apartmentName, String ownerEmail) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving reports for apartment: {} owned by: {}&quot;, apartmentName, ownerEmail);</b>
+<b class="nc">&nbsp;        validateOwner(ownerEmail);</b>
+<b class="nc">&nbsp;        return reportRepository.findByApartmentNameAndApartmentOwnerEmail(apartmentName, ownerEmail)</b>
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateOwner(String ownerEmail) {
+<b class="nc">&nbsp;        ownerRepository.findByEmail(ownerEmail)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Owner not found&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ReportDTO convertToDTO(Report report) {
+<b class="nc">&nbsp;        ReportDTO dto = new ReportDTO();</b>
+<b class="nc">&nbsp;        dto.setId(report.getId());</b>
+<b class="nc">&nbsp;        dto.setReporterUsername(report.getReporterUsername());</b>
+&nbsp;      //  dto.setReporterEmail(report.getReporterEmail());
+<b class="nc">&nbsp;        dto.setReason(report.getReason());</b>
+<b class="nc">&nbsp;        dto.setApartmentName(report.getApartment().getName());</b>
+<b class="nc">&nbsp;        dto.setStatus(report.getStatus());</b>
+<b class="nc">&nbsp;        dto.setReportDate(String.valueOf(report.getReportDate()));</b>
+<b class="nc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .connection-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group label {
+            width: 100px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .status-bar {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        #chat-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        #log {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .message {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .message.system {
+            background-color: #f8f9fa;
+            border-left: 3px solid #6c757d;
+            color: #666;
+            font-style: italic;
+            margin: 8px 40px;
+        }
+
+        .message.own-message {
+            background-color: #e3f2fd;
+            border-left: 3px solid #007bff;
+            margin-left: 40px;
+        }
+
+        .message.other-message {
+            background-color: #fff3e0;
+            border-left: 3px solid #dc3545;
+            margin-right: 40px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+        }
+
+        .content {
+            margin-top: 5px;
+            word-wrap: break-word;
+        }
+
+        .read-status {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+            padding-left: 4px;
+            border-left: 2px solid #eee;
+        }
+
+        .message-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #msg {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .connect-btn {
+            background-color: #28a745;
+        }
+
+        .disconnect-btn {
+            background-color: #dc3545;
+            display: none;
+        }
+
+        .send-btn {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div class="connection-panel">
+    <h2>WebSocket Chat</h2>
+    <div class="form-group">
+        <label for="wsserver">Server URL:</label>
+        <input type="text" id="wsserver" value="ws://coms-3090-057.class.las.iastate.edu:8080/" />
+    </div>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" />
+        <button onclick="connect()" class="connect-btn" id="connectBtn">Connect</button>
+        <button onclick="disconnect()" class="disconnect-btn" id="disconnectBtn">Disconnect</button>
+    </div>
+    <div class="status-bar" id="connection-status" style="display: none;"></div>
+</div>
+
+<div id="chat-container">
+    <div id="log"></div>
+    <div class="message-input">
+        <input type="text" id="msg" placeholder="Type your message (use @username for private messages)" />
+        <button onclick="send()" class="send-btn">Send</button>
+    </div>
+</div>
+
+<script>
+    let ws;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectDelay = 3000;
+    const currentUser = () => document.getElementById("username").value;
+
+    function connect() {
+        const username = currentUser();
+        const wsserver = document.getElementById("wsserver").value.trim();
+
+        if (!username) {
+            showStatus("Please enter a username", "error");
+            return;
+        }
+
+        const url = `${wsserver}chat/${username}`;
+        console.log("Connecting to:", url);
+        ws = new WebSocket(url);
+        setupWebSocket();
+    }
+
+    function setupWebSocket() {
+        ws.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                console.log("Received message:", data);
+
+                if (data.type === 'READ_RECEIPT') {
+                    handleReadReceipt(data);
+                    return;
+                }
+
+                displayMessage(data);
+
+                // Mark message as read if it's not our own
+                if (data.sender !== currentUser() &&
+                    data.type !== 'JOIN' &&
+                    data.type !== 'LEAVE') {
+                    console.log("Sending read receipt for:", data.messageId);
+                    setTimeout(() => sendReadReceipt(data.messageId), 500);
+                }
+            } catch (e) {
+                console.error("Error processing message:", e);
+                handleSystemMessage(event.data);
+            }
+        };
+
+        ws.onopen = function(event) {
+            console.log("Connected to chat server");
+            showStatus("Connected to chat server", "success");
+            document.getElementById("chat-container").style.display = "block";
+            document.getElementById("connectBtn").style.display = "none";
+            document.getElementById("disconnectBtn").style.display = "inline-block";
+            document.getElementById("username").disabled = true;
+            document.getElementById("wsserver").disabled = true;
+        };
+
+        ws.onclose = handleDisconnect;
+        ws.onerror = handleError;
+    }
+
+    function handleReadReceipt(data) {
+        console.log("Processing read receipt:", data);
+        const messageElement = document.getElementById(`message-${data.messageId}`);
+        if (messageElement) {
+            const statusElement = messageElement.querySelector('.read-status');
+            if (statusElement && data.readBy) {
+                const messageSender = messageElement.querySelector('.username')?.textContent;
+                const readers = Array.from(data.readBy)
+                    .filter(reader => reader !== messageSender)
+                    .join(', ');
+
+                statusElement.textContent = readers ? `Read by: ${readers}` : 'Not read yet';
+                console.log("Updated read status:", statusElement.textContent);
+            }
+        }
+    }
+
+    function displayMessage(message) {
+        const log = document.getElementById("log");
+        const messageDiv = document.createElement('div');
+        messageDiv.id = `message-${message.messageId}`;
+
+        const isSystem = message.type === 'JOIN' || message.type === 'LEAVE';
+        const isCurrentUser = message.sender === currentUser();
+
+        if (isSystem) {
+            messageDiv.className = 'message system';
+        } else {
+            messageDiv.className = `message ${isCurrentUser ? 'own-message' : 'other-message'}`;
+        }
+
+        const time = new Date(message.timestamp).toLocaleTimeString();
+
+        let readStatus = 'Not read yet';
+        if (message.readBy && message.readBy.length > 0) {
+            const readers = Array.from(message.readBy)
+                .filter(reader => reader !== message.sender)
+                .join(', ');
+            if (readers) {
+                readStatus = `Read by: ${readers}`;
+            }
+        }
+
+        messageDiv.innerHTML = `
+                <div class="message-header">
+                    <span class="timestamp">${time}</span>
+                    <span class="username" style="color: ${isCurrentUser ? '#007bff' : '#dc3545'}">${message.sender}</span>
+                </div>
+                <div class="content">${message.content}</div>
+                ${!isSystem ? `<div class="read-status">${readStatus}</div>` : ''}
+            `;
+
+        log.appendChild(messageDiv);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function handleSystemMessage(message) {
+        if (message.includes("Username already exists")) {
+            showStatus("Username already taken", "error");
+            disconnect();
+        } else {
+            const log = document.getElementById("log");
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            messageDiv.textContent = message;
+            log.appendChild(messageDiv);
+            log.scrollTop = log.scrollHeight;
+        }
+    }
+
+    function showStatus(message, type) {
+        const status = document.getElementById("connection-status");
+        status.style.display = "block";
+        status.style.backgroundColor = type === "error" ? "#f8d7da" : "#d4edda";
+        status.style.color = type === "error" ? "#721c24" : "#155724";
+        status.textContent = message;
+    }
+
+    function handleDisconnect() {
+        disconnect();
+        if (reconnectAttempts < maxReconnectAttempts) {
+            setTimeout(() => {
+                reconnectAttempts++;
+                console.log(`Attempting to reconnect (${reconnectAttempts}/${maxReconnectAttempts})...`);
+                connect();
+            }, reconnectDelay);
+        }
+    }
+
+    function handleError(error) {
+        console.error("WebSocket error:", error);
+        showStatus("Connection error occurred", "error");
+    }
+
+    function disconnect() {
+        if (ws) {
+            ws.close();
+        }
+        document.getElementById("chat-container").style.display = "none";
+        document.getElementById("connectBtn").style.display = "inline-block";
+        document.getElementById("disconnectBtn").style.display = "none";
+        document.getElementById("username").disabled = false;
+        document.getElementById("wsserver").disabled = false;
+        document.getElementById("log").innerHTML = '';
+        showStatus("Disconnected from chat server", "error");
+    }
+
+    function sendReadReceipt(messageId) {
+        if (ws?.readyState === WebSocket.OPEN) {
+            console.log("Sending read receipt for message:", messageId);
+            ws.send(`READ:${messageId}`);
+        }
+    }
+
+    function send() {
+        if (ws?.readyState === WebSocket.OPEN) {
+            const messageInput = document.getElementById("msg");
+            const message = messageInput.value.trim();
+
+            if (message) {
+                ws.send(message);
+                messageInput.value = '';
+            }
+        } else {
+            showStatus("Not connected to chat server", "error");
+        }
+    }
+
+    // Event Listeners
+    document.getElementById("msg").addEventListener("keypress", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            send();
+        }
+    });
+
+    document.getElementById("username").addEventListener("input", function(event) {
+        this.value = this.value.replace(/[^a-zA-Z0-9_-]/g, '');
+    });
+</script>
+</body>
+</html>
+
+
+

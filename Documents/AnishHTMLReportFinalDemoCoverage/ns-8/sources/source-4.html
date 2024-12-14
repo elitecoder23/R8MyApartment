@@ -1,0 +1,95 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IApartmentOwnerRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IApartmentOwnerRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IApartmentOwnerRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.ApartmentOwner;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for ApartmentOwner entities.
+&nbsp; * Provides CRUD operations and methods to find an apartment owner by email or name.
+&nbsp; */
+&nbsp;public interface IApartmentOwnerRepository extends JpaRepository&lt;ApartmentOwner, Long&gt; {
+&nbsp;    /**
+&nbsp;     * Finds an apartment owner by their email.
+&nbsp;     *
+&nbsp;     * @param email the email of the apartment owner
+&nbsp;     * @return an Optional containing the apartment owner if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;ApartmentOwner&gt; findByEmail(String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds an apartment owner by their name.
+&nbsp;     *
+&nbsp;     * @param name the name of the apartment owner
+&nbsp;     * @return an Optional containing the apartment owner if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;ApartmentOwner&gt; findByName(String name);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

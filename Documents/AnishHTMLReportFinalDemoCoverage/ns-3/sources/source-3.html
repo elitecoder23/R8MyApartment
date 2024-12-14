@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApartmentController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: ApartmentController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApartmentController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import mk12.service.ApartmentService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * REST controller for managing apartments.
+&nbsp; * Provides endpoints for creating, retrieving, updating, and deleting apartments.
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/apartments&quot;)
+&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+&nbsp;@Tag(name = &quot;Apartment Management&quot;, description = &quot;APIs for managing apartment properties&quot;)
+<b class="fc">&nbsp;public class ApartmentController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ApartmentService apartmentService;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Create a new apartment&quot;,
+&nbsp;            description = &quot;Creates a new apartment entry with the specified details and assigns it to an owner&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Apartment created successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Apartment.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Invalid input data&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @PostMapping(&quot;/create&quot;)
+&nbsp;    public ResponseEntity&lt;Apartment&gt; createApartment(
+&nbsp;            @Parameter(description = &quot;Apartment details&quot;, required = true)
+&nbsp;            @RequestBody Apartment apartment,
+&nbsp;            @Parameter(description = &quot;Name of the apartment owner&quot;, required = true)
+&nbsp;            @RequestParam String owner) {
+<b class="fc">&nbsp;        return ResponseEntity.ok(apartmentService.createApartment(apartment, owner));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get all apartments&quot;,
+&nbsp;            description = &quot;Retrieves a list of all apartments in the system&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successfully retrieved all apartments&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Apartment.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/showall&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Apartment&gt;&gt; getAllApartments() {
+<b class="fc">&nbsp;        return ResponseEntity.ok(apartmentService.getAllApartments());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Delete an apartment&quot;,
+&nbsp;            description = &quot;Removes an apartment from the system by its name&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Apartment successfully deleted&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Apartment not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @DeleteMapping(&quot;/{name}/delete&quot;)
+&nbsp;    public ResponseEntity&lt;Void&gt; deleteApartment(
+&nbsp;            @Parameter(description = &quot;Name of the apartment to delete&quot;, required = true)
+&nbsp;            @PathVariable String name) {
+<b class="fc">&nbsp;        apartmentService.deleteApartment(name);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Find apartment by name&quot;,
+&nbsp;            description = &quot;Retrieves a specific apartment&#39;s details by its name&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Apartment found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Apartment.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Apartment not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/name/{apartmentName}&quot;)
+&nbsp;    public ResponseEntity&lt;Apartment&gt; getApartmentByName(
+&nbsp;            @Parameter(description = &quot;Name of the apartment to search for&quot;, required = true)
+&nbsp;            @PathVariable String apartmentName) {
+<b class="fc">&nbsp;        return ResponseEntity.ok(apartmentService.getApartmentByName(apartmentName));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Find apartments by owner&quot;,
+&nbsp;            description = &quot;Retrieves all apartments belonging to a specific owner&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successfully retrieved owner&#39;s apartments&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Apartment.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;No apartments found for the owner&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/owner/name/{ownerName}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;Apartment&gt;&gt; getApartmentsByOwnerName(
+&nbsp;            @Parameter(description = &quot;Name of the owner whose apartments to retrieve&quot;, required = true)
+&nbsp;            @PathVariable String ownerName) {
+<b class="fc">&nbsp;        return ResponseEntity.ok(apartmentService.getApartmentsByOwnerName(ownerName));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Update apartment details&quot;,
+&nbsp;            description = &quot;Updates an existing apartment&#39;s information based on the provided details&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Apartment successfully updated&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Apartment.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Invalid input data&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Apartment not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal server error&quot;)
+&nbsp;    })
+&nbsp;    @PutMapping(&quot;/update/{apartmentName}&quot;)
+&nbsp;    public ResponseEntity&lt;Apartment&gt; updateApartment(
+&nbsp;            @Parameter(description = &quot;Name of the apartment to update&quot;, required = true)
+&nbsp;            @PathVariable String apartmentName,
+&nbsp;            @Parameter(description = &quot;Updated apartment details&quot;, required = true)
+&nbsp;            @RequestBody Apartment apartmentDetails) {
+<b class="fc">&nbsp;        Apartment updatedApartment = apartmentService.updateApartment(apartmentName, apartmentDetails);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(updatedApartment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

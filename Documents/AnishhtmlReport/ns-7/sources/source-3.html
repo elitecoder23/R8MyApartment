@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FriendRequestService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: FriendRequestService (mk12.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FriendRequestService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12%
+  </span>
+  <span class="absValue">
+    (3/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.model.FriendRequest;
+&nbsp;import mk12.model.User;
+&nbsp;import mk12.repository.FriendRequestRepository;
+&nbsp;import mk12.repository.IUserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service class for managing friend requests.
+&nbsp; * Provides methods for sending, retrieving, accepting, and denying friend requests.
+&nbsp; */
+&nbsp;@Service
+&nbsp;public class FriendRequestService {
+&nbsp;
+&nbsp;    private final FriendRequestRepository friendRequestRepository;
+&nbsp;    private final IUserRepository iUserRepository;
+&nbsp;
+&nbsp;    @Autowired
+<b class="fc">&nbsp;    public FriendRequestService(FriendRequestRepository friendRequestRepository, IUserRepository iUserRepository) {</b>
+<b class="fc">&nbsp;        this.friendRequestRepository = friendRequestRepository;</b>
+<b class="fc">&nbsp;        this.iUserRepository = iUserRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a friend request from one user to another.
+&nbsp;     *
+&nbsp;     * @param senderUsername the username of the sender
+&nbsp;     * @param receiverUsername the username of the receiver
+&nbsp;     * @return the sent friend request
+&nbsp;     * @throws IllegalArgumentException if the sender or receiver does not exist
+&nbsp;     */
+&nbsp;    public FriendRequest sendFriendRequest(String senderUsername, String receiverUsername) {
+<b class="nc">&nbsp;        Optional&lt;User&gt; sender = iUserRepository.findByUsername(senderUsername);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; receiver = iUserRepository.findByUsername(receiverUsername);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (sender.isEmpty() || receiver.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Sender or receiver does not exist.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        FriendRequest friendRequest = new FriendRequest();</b>
+<b class="nc">&nbsp;        friendRequest.setSender(sender.get());</b>
+<b class="nc">&nbsp;        friendRequest.setReceiver(receiver.get());</b>
+<b class="nc">&nbsp;        friendRequest.setStatus(FriendRequest.FriendRequestStatus.PENDING);</b>
+&nbsp;
+<b class="nc">&nbsp;        return friendRequestRepository.save(friendRequest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all friend requests for a given user.
+&nbsp;     *
+&nbsp;     * @param username the username of the receiver
+&nbsp;     * @return a list of friend requests
+&nbsp;     */
+&nbsp;    public List&lt;FriendRequest&gt; getAllFriendRequests(String username) {
+<b class="nc">&nbsp;        return friendRequestRepository.findByReceiver_Username(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accepts a friend request for a given user.
+&nbsp;     *
+&nbsp;     * @param username the username of the receiver
+&nbsp;     * @return the accepted friend request
+&nbsp;     * @throws IllegalArgumentException if the friend request is not found
+&nbsp;     */
+&nbsp;    public FriendRequest acceptFriendRequestByUsername(String username) {
+<b class="nc">&nbsp;        List&lt;FriendRequest&gt; friendRequests = friendRequestRepository.findByReceiver_Username(username);</b>
+<b class="nc">&nbsp;        if (friendRequests.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Friend request not found.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        FriendRequest friendRequest = friendRequests.get(0); // Assuming only one pending request per user</b>
+<b class="nc">&nbsp;        friendRequest.setStatus(FriendRequest.FriendRequestStatus.ACCEPTED);</b>
+<b class="nc">&nbsp;        return friendRequestRepository.save(friendRequest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Denies a friend request for a given user.
+&nbsp;     *
+&nbsp;     * @param username the username of the receiver
+&nbsp;     * @return the denied friend request
+&nbsp;     * @throws IllegalArgumentException if the friend request is not found
+&nbsp;     */
+&nbsp;    public FriendRequest denyFriendRequestByUsername(String username) {
+<b class="nc">&nbsp;        List&lt;FriendRequest&gt; friendRequests = friendRequestRepository.findByReceiver_Username(username);</b>
+<b class="nc">&nbsp;        if (friendRequests.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Friend request not found.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        FriendRequest friendRequest = friendRequests.get(0); // Assuming only one pending request per user</b>
+<b class="nc">&nbsp;        friendRequest.setStatus(FriendRequest.FriendRequestStatus.REJECTED);</b>
+<b class="nc">&nbsp;        return friendRequestRepository.save(friendRequest);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

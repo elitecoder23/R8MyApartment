@@ -1,0 +1,222 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FriendRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.model</a>
+</div>
+
+<h1>Coverage Summary for Class: FriendRequest (mk12.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FriendRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FriendRequest$FriendRequestStatus</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FriendRequest$HibernateInstantiator$DcMbNgZf</td>
+  </tr>
+  <tr>
+    <td class="name">FriendRequest$HibernateProxy$R0q5dCqx</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    21.4%
+  </span>
+  <span class="absValue">
+    (3/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    31.2%
+  </span>
+  <span class="absValue">
+    (5/16)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.model;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.Getter;
+&nbsp;
+&nbsp;/**
+&nbsp; * Entity representing a friend request.
+&nbsp; * Contains the ID, sender, receiver, and status of the friend request.
+&nbsp; */
+&nbsp;@Getter
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;friend_requests&quot;)
+<b class="fc">&nbsp;public class FriendRequest {</b>
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<b class="nc">&nbsp;    private int id;</b>
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;sender_id&quot;, nullable = false)
+<b class="nc">&nbsp;    private User sender;</b>
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;receiver_id&quot;, nullable = false)
+<b class="nc">&nbsp;    private User receiver;</b>
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+<b class="nc">&nbsp;    private FriendRequestStatus status;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Enum representing the status of the friend request.
+&nbsp;     */
+<b class="fc">&nbsp;    public enum FriendRequestStatus {</b>
+<b class="fc">&nbsp;        PENDING,</b>
+<b class="fc">&nbsp;        ACCEPTED,</b>
+<b class="fc">&nbsp;        REJECTED</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(int id) {
+<b class="nc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSender(User sender) {
+<b class="nc">&nbsp;        this.sender = sender;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setReceiver(User receiver) {
+<b class="nc">&nbsp;        this.receiver = receiver;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStatus(FriendRequestStatus status) {
+<b class="nc">&nbsp;        this.status = status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isPending() {
+<b class="nc">&nbsp;        return status == FriendRequestStatus.PENDING;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isAccepted() {
+<b class="nc">&nbsp;        return status == FriendRequestStatus.ACCEPTED;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isRejected() {
+<b class="nc">&nbsp;        return status == FriendRequestStatus.REJECTED;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

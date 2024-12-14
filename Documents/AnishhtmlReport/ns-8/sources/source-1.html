@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IRoommateRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IRoommateRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IRoommateRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.Roommate;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for Roommate entities.
+&nbsp; * Provides CRUD operations and methods to find roommates by various attributes such as username, age range, occupation, lifestyle, budget range, and name.
+&nbsp; * Also provides a method to delete a roommate by their name.
+&nbsp; */
+&nbsp;@Repository
+&nbsp;public interface IRoommateRepository extends JpaRepository&lt;Roommate, Long&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a roommate by their username.
+&nbsp;     *
+&nbsp;     * @param username the username of the roommate
+&nbsp;     * @return the roommate with the specified username
+&nbsp;     */
+&nbsp;    Roommate findByUsername(String username);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of roommates within a specified age range.
+&nbsp;     *
+&nbsp;     * @param minAge the minimum age
+&nbsp;     * @param maxAge the maximum age
+&nbsp;     * @return a list of roommates within the specified age range
+&nbsp;     */
+&nbsp;    List&lt;Roommate&gt; findByAgeBetween(int minAge, int maxAge);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of roommates by their occupation.
+&nbsp;     *
+&nbsp;     * @param occupation the occupation of the roommates
+&nbsp;     * @return a list of roommates with the specified occupation
+&nbsp;     */
+&nbsp;    List&lt;Roommate&gt; findByOccupation(String occupation);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of roommates by their lifestyle.
+&nbsp;     *
+&nbsp;     * @param lifestyle the lifestyle of the roommates
+&nbsp;     * @return a list of roommates with the specified lifestyle
+&nbsp;     */
+&nbsp;    List&lt;Roommate&gt; findByLifestyle(String lifestyle);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of roommates by their budget range.
+&nbsp;     *
+&nbsp;     * @param budgetRange the budget range of the roommates
+&nbsp;     * @return a list of roommates with the specified budget range
+&nbsp;     */
+&nbsp;    List&lt;Roommate&gt; findByBudgetRange(String budgetRange);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a roommate by their name.
+&nbsp;     *
+&nbsp;     * @param name the name of the roommate
+&nbsp;     * @return an Optional containing the roommate if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;Roommate&gt; findByName(String name);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of roommates whose names contain the specified string, ignoring case.
+&nbsp;     *
+&nbsp;     * @param name the string to search for in the names
+&nbsp;     * @return a list of roommates whose names contain the specified string, ignoring case
+&nbsp;     */
+&nbsp;    List&lt;Roommate&gt; findByNameContainingIgnoreCase(String name);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a roommate by their name.
+&nbsp;     *
+&nbsp;     * @param name the name of the roommate to be deleted
+&nbsp;     */
+&nbsp;    void deleteByName(String name);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

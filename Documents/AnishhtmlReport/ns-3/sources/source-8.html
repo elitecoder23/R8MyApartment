@@ -1,0 +1,430 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RoommateMatchingController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: RoommateMatchingController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoommateMatchingController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.1%
+  </span>
+  <span class="absValue">
+    (3/74)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import mk12.dto.MatchResultDTO;
+&nbsp;import mk12.dto.QuizSubmissionDTO;
+&nbsp;import mk12.service.RoommateMatchingService;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * REST controller for managing roommate matching.
+&nbsp; * Provides endpoints for submitting quizzes, finding matches, and managing quiz submissions.
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/roommate-matching&quot;)
+&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+&nbsp;@Tag(name = &quot;Roommate Matching&quot;, description = &quot;API endpoints for roommate matching functionality including quiz submission, match finding, and compatibility calculations&quot;)
+&nbsp;public class RoommateMatchingController {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(RoommateMatchingController.class);</b>
+&nbsp;    private final RoommateMatchingService matchingService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor to initialize RoommateMatchingService.
+&nbsp;     *
+&nbsp;     * @param matchingService the roommate matching service
+&nbsp;     */
+<b class="fc">&nbsp;    public RoommateMatchingController(RoommateMatchingService matchingService) {</b>
+<b class="fc">&nbsp;        this.matchingService = matchingService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Submit roommate matching quiz&quot;,
+&nbsp;            description = &quot;Submits a new quiz containing lifestyle preferences, habits, and personality traits for roommate matching&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;201&quot;,
+&nbsp;                    description = &quot;Quiz submitted successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid quiz submission data&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while processing quiz submission&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @PostMapping(&quot;/submit-quiz&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; submitQuiz(
+&nbsp;            @Parameter(description = &quot;Quiz submission data including username and answers&quot;, required = true)
+&nbsp;            @RequestBody QuizSubmissionDTO submission) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Receiving quiz submission for user: {}&quot;, submission.getUsername());</b>
+<b class="nc">&nbsp;            matchingService.submitQuiz(submission);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully submitted quiz for user: {}&quot;, submission.getUsername());</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;message&quot;, &quot;Quiz submitted successfully&quot;),</b>
+&nbsp;                    HttpStatus.CREATED
+&nbsp;            );
+<b class="nc">&nbsp;        } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error submitting quiz&quot;, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, e.getMessage()),</b>
+&nbsp;                    HttpStatus.BAD_REQUEST
+&nbsp;            );
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Unexpected error submitting quiz&quot;, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;An unexpected error occurred&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Find potential roommate matches&quot;,
+&nbsp;            description = &quot;Retrieves a list of potential roommate matches based on quiz compatibility scores and preferences&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Successfully retrieved matches&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = MatchResultDTO.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid username or no quiz submission found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while finding matches&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/find-matches&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; findMatches(
+&nbsp;            @Parameter(description = &quot;Username of the person seeking matches&quot;, required = true)
+&nbsp;            @RequestParam String username) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Finding matches for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            List&lt;MatchResultDTO&gt; matches = matchingService.findMatches(username);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Found {} potential matches for user: {}&quot;, matches.size(), username);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(matches);</b>
+<b class="nc">&nbsp;        } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error finding matches for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, e.getMessage()),</b>
+&nbsp;                    HttpStatus.BAD_REQUEST
+&nbsp;            );
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Unexpected error finding matches for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;An unexpected error occurred&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Get quiz submission&quot;,
+&nbsp;            description = &quot;Retrieves the existing quiz submission for a specific user&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Successfully retrieved quiz submission&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = QuizSubmissionDTO.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;Quiz submission not found for the specified user&quot;
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while retrieving quiz submission&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/quiz-submission/{username}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getQuizSubmissionByUsername(
+&nbsp;            @Parameter(description = &quot;Username of the quiz submission owner&quot;, required = true)
+&nbsp;            @PathVariable String username) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Retrieving quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            QuizSubmissionDTO submission = matchingService.getQuizSubmissionByUsername(username);</b>
+<b class="nc">&nbsp;            if (submission != null) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Successfully retrieved quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(submission);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                logger.warn(&quot;Quiz submission not found for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.notFound().build();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error retrieving quiz submission for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;Failed to retrieve quiz submission&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Delete quiz submission&quot;,
+&nbsp;            description = &quot;Removes an existing quiz submission for a specific user&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Quiz submission deleted successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;Quiz submission not found for deletion&quot;
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while deleting quiz submission&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @DeleteMapping(&quot;/quiz-submission/{username}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteQuizSubmissionByUsername(
+&nbsp;            @Parameter(description = &quot;Username of the quiz submission to delete&quot;, required = true)
+&nbsp;            @PathVariable String username) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Deleting quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            boolean deleted = matchingService.deleteQuizSubmissionByUsername(username);</b>
+<b class="nc">&nbsp;            if (deleted) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Successfully deleted quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;Quiz submission deleted successfully&quot;));</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                logger.warn(&quot;Quiz submission not found for deletion: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.notFound().build();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error deleting quiz submission for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;Failed to delete quiz submission&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Update quiz submission&quot;,
+&nbsp;            description = &quot;Updates an existing quiz submission with new answers and preferences&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Quiz submission updated successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = QuizSubmissionDTO.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;Quiz submission not found for update&quot;
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while updating quiz submission&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @PutMapping(&quot;/quiz-submission/{username}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateQuizSubmissionByUsername(
+&nbsp;            @Parameter(description = &quot;Username of the quiz submission to update&quot;, required = true)
+&nbsp;            @PathVariable String username,
+&nbsp;            @Parameter(description = &quot;Updated quiz submission data&quot;, required = true)
+&nbsp;            @RequestBody QuizSubmissionDTO updatedSubmission) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Updating quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;            updatedSubmission.setUsername(username);</b>
+<b class="nc">&nbsp;            QuizSubmissionDTO updated = matchingService.updateQuizSubmissionByUsername(username, updatedSubmission);</b>
+<b class="nc">&nbsp;            if (updated != null) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Successfully updated quiz submission for user: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(updated);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                logger.warn(&quot;Quiz submission not found for update: {}&quot;, username);</b>
+<b class="nc">&nbsp;                return ResponseEntity.notFound().build();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error updating quiz submission for user: {}&quot;, username, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;Failed to update quiz submission&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Calculate match compatibility&quot;,
+&nbsp;            description = &quot;Calculates the compatibility percentage between two specific users based on their quiz submissions&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Successfully calculated match compatibility&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = MatchResultDTO.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid usernames or missing quiz submissions&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error while calculating match&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = Map.class))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/calculate-match&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; calculateMatch(
+&nbsp;            @Parameter(description = &quot;Username of the first user&quot;, required = true)
+&nbsp;            @RequestParam String username1,
+&nbsp;            @Parameter(description = &quot;Username of the second user&quot;, required = true)
+&nbsp;            @RequestParam String username2) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Calculating match between users: {} and {}&quot;, username1, username2);</b>
+<b class="nc">&nbsp;            MatchResultDTO match = matchingService.calculateSingleMatch(username1, username2);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully calculated match between users: {} and {}&quot;, username1, username2);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(match);</b>
+<b class="nc">&nbsp;        } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error calculating match between users: {} and {}&quot;, username1, username2, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, e.getMessage()),</b>
+&nbsp;                    HttpStatus.BAD_REQUEST
+&nbsp;            );
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Unexpected error calculating match&quot;, e);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(</b>
+<b class="nc">&nbsp;                    Map.of(&quot;error&quot;, &quot;An unexpected error occurred&quot;),</b>
+&nbsp;                    HttpStatus.INTERNAL_SERVER_ERROR
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IReviewRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IReviewRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IReviewRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.dto.ReviewDTO;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import mk12.model.Review;
+&nbsp;import mk12.model.User;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for Review entities.
+&nbsp; * Provides CRUD operations and a method to find reviews by apartment name.
+&nbsp; */
+&nbsp;@Repository
+&nbsp;public interface IReviewRepository extends JpaRepository&lt;Review, Integer&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a review by the apartment name.
+&nbsp;     *
+&nbsp;     * @param apartmentName the name of the apartment
+&nbsp;     * @return an Optional containing the review if found, or empty if not found
+&nbsp;     */
+&nbsp;
+&nbsp;    List&lt;Review&gt; findByApartment_Name(String apartmentName);
+&nbsp;
+&nbsp;    List&lt;Review&gt; findByApartment_Id(int apartmentId);
+&nbsp;    @Query(&quot;SELECT r FROM Review r WHERE r.user.username = :username&quot;)
+&nbsp;    List&lt;Review&gt; findByUserUsername(String username);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

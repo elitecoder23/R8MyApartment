@@ -1,0 +1,264 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > NvidiaAIService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: NvidiaAIService (mk12.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NvidiaAIService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.6%
+  </span>
+  <span class="absValue">
+    (4/72)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import mk12.dto.QuizSubmissionDTO;
+&nbsp;import org.springframework.http.HttpEntity;
+&nbsp;import org.springframework.http.HttpHeaders;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.fasterxml.jackson.databind.node.ObjectNode;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class NvidiaAIService {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(NvidiaAIService.class);</b>
+&nbsp;
+&nbsp;    @Value(&quot;${nvidia.api.key:Oop1nZF9nwqsYX845tdXgMSmWHYKQI-xweDg6j5Yc9I_KUgPghRD_VLCxGcIlt0J}&quot;)
+&nbsp;    private String apiKey;
+&nbsp;
+&nbsp;    @Value(&quot;${nvidia.api.url:https://integrate.api.nvidia.com/v1}&quot;)
+&nbsp;    private String apiUrl;
+&nbsp;
+&nbsp;    private final RestTemplate restTemplate;
+&nbsp;    private final ObjectMapper objectMapper;
+&nbsp;
+<b class="fc">&nbsp;    public NvidiaAIService() {</b>
+<b class="fc">&nbsp;        this.restTemplate = new RestTemplate();</b>
+<b class="fc">&nbsp;        this.objectMapper = new ObjectMapper();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double calculateCompatibilityScore(QuizSubmissionDTO user1, QuizSubmissionDTO user2) {
+&nbsp;        try {
+<b class="nc">&nbsp;            logger.info(&quot;Attempting to call NVIDIA AI API for users {} and {}&quot;,</b>
+<b class="nc">&nbsp;                    user1.getUsername(), user2.getUsername());</b>
+&nbsp;
+<b class="nc">&nbsp;            HttpHeaders headers = new HttpHeaders();</b>
+<b class="nc">&nbsp;            headers.setContentType(MediaType.APPLICATION_JSON);</b>
+<b class="nc">&nbsp;            headers.set(&quot;Authorization&quot;, &quot;Bearer &quot; + apiKey);</b>
+&nbsp;
+<b class="nc">&nbsp;            String prompt = createMatchingPrompt(user1, user2);</b>
+<b class="nc">&nbsp;            logger.debug(&quot;Generated prompt for AI: {}&quot;, prompt);</b>
+&nbsp;
+<b class="nc">&nbsp;            ObjectNode requestBody = objectMapper.createObjectNode();</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;model&quot;, &quot;llama2-70b-v2&quot;);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;messages&quot;, &quot;[{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;&quot; + prompt + &quot;\&quot;}]&quot;);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;temperature&quot;, 0.7);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;max_tokens&quot;, 100);</b>
+&nbsp;
+<b class="nc">&nbsp;            HttpEntity&lt;String&gt; request = new HttpEntity&lt;&gt;(requestBody.toString(), headers);</b>
+&nbsp;
+<b class="nc">&nbsp;            logger.info(&quot;Sending request to NVIDIA AI API at: {}&quot;, apiUrl + &quot;/chat/completions&quot;);</b>
+<b class="nc">&nbsp;            String response = restTemplate.postForObject(apiUrl + &quot;/chat/completions&quot;, request, String.class);</b>
+<b class="nc">&nbsp;            logger.debug(&quot;Received response from AI: {}&quot;, response);</b>
+&nbsp;
+<b class="nc">&nbsp;            double score = parseAIResponse(response);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully calculated AI compatibility score: {} for users {} and {}&quot;,</b>
+<b class="nc">&nbsp;                    score, user1.getUsername(), user2.getUsername());</b>
+<b class="nc">&nbsp;            return score;</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Failed to get response from NVIDIA AI API: {}. Falling back to traditional scoring.&quot;,</b>
+<b class="nc">&nbsp;                    e.getMessage());</b>
+<b class="nc">&nbsp;            logger.debug(&quot;Full stack trace:&quot;, e);</b>
+&nbsp;
+<b class="nc">&nbsp;            double fallbackScore = calculateTraditionalMatchScore(user1, user2);</b>
+<b class="nc">&nbsp;            logger.info(&quot;Calculated fallback compatibility score: {} for users {} and {}&quot;,</b>
+<b class="nc">&nbsp;                    fallbackScore, user1.getUsername(), user2.getUsername());</b>
+<b class="nc">&nbsp;            return fallbackScore;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private String createMatchingPrompt(QuizSubmissionDTO user1, QuizSubmissionDTO user2) {
+<b class="nc">&nbsp;        return String.format(</b>
+&nbsp;                &quot;Analyze the compatibility of two potential roommates based on their preferences:&quot; +
+&nbsp;                        &quot;\nPerson 1: Morning person: %d/10, Hosting: %d/10, Pets: %d/10, Smoking: %d/10, &quot; +
+&nbsp;                        &quot;Organization: %d/10, People over: %d/10, Noise: %d/10, Cleanliness: %d/10&quot; +
+&nbsp;                        &quot;\nPerson 2: Morning person: %d/10, Hosting: %d/10, Pets: %d/10, Smoking: %d/10, &quot; +
+&nbsp;                        &quot;Organization: %d/10, People over: %d/10, Noise: %d/10, Cleanliness: %d/10&quot; +
+&nbsp;                        &quot;\nProvide a compatibility percentage (0-100) based on these factors. &quot; +
+&nbsp;                        &quot;Consider lifestyle conflicts and synergies. Return only the number.&quot;,
+<b class="nc">&nbsp;                user1.getMorningPerson(), user1.getHosting(), user1.getLikingPets(), user1.getSmoking(),</b>
+<b class="nc">&nbsp;                user1.getOrganizationSkills(), user1.getPeopleOver(), user1.getNoiseLevel(), user1.getCleanliness(),</b>
+<b class="nc">&nbsp;                user2.getMorningPerson(), user2.getHosting(), user2.getLikingPets(), user2.getSmoking(),</b>
+<b class="nc">&nbsp;                user2.getOrganizationSkills(), user2.getPeopleOver(), user2.getNoiseLevel(), user2.getCleanliness()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    private double parseAIResponse(String response) {
+&nbsp;        try {
+<b class="nc">&nbsp;            ObjectNode jsonNode = objectMapper.readTree(response).deepCopy();</b>
+<b class="nc">&nbsp;            String content = jsonNode.get(&quot;choices&quot;).get(0).get(&quot;message&quot;).get(&quot;content&quot;).asText();</b>
+<b class="nc">&nbsp;            return Double.parseDouble(content.trim());</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error parsing AI response: {}&quot;, e.getMessage());</b>
+<b class="nc">&nbsp;            return 0.0;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private double calculateTraditionalMatchScore(QuizSubmissionDTO user1, QuizSubmissionDTO user2) {
+&nbsp;        // Fallback matching algorithm
+<b class="nc">&nbsp;        double totalDifference = 0;</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getMorningPerson() - user2.getMorningPerson());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getHosting() - user2.getHosting());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getLikingPets() - user2.getLikingPets());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getSmoking() - user2.getSmoking());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getOrganizationSkills() - user2.getOrganizationSkills());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getPeopleOver() - user2.getPeopleOver());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getNoiseLevel() - user2.getNoiseLevel());</b>
+<b class="nc">&nbsp;        totalDifference += Math.abs(user1.getCleanliness() - user2.getCleanliness());</b>
+&nbsp;
+<b class="nc">&nbsp;        return 100 - (totalDifference * 100 / (8 * 10)); // Convert to percentage</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean testApiConnection() {
+&nbsp;        try {
+<b class="nc">&nbsp;            HttpHeaders headers = new HttpHeaders();</b>
+<b class="nc">&nbsp;            headers.setContentType(MediaType.APPLICATION_JSON);</b>
+<b class="nc">&nbsp;            headers.set(&quot;Authorization&quot;, &quot;Bearer &quot; + apiKey);</b>
+&nbsp;
+<b class="nc">&nbsp;            ObjectNode requestBody = objectMapper.createObjectNode();</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;model&quot;, &quot;llama2-70b-v2&quot;);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;messages&quot;, &quot;[{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;Say hello\&quot;}]&quot;);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;temperature&quot;, 0.7);</b>
+<b class="nc">&nbsp;            requestBody.put(&quot;max_tokens&quot;, 100);</b>
+&nbsp;
+<b class="nc">&nbsp;            HttpEntity&lt;String&gt; request = new HttpEntity&lt;&gt;(requestBody.toString(), headers);</b>
+&nbsp;
+<b class="nc">&nbsp;            logger.info(&quot;Testing NVIDIA AI API connection...&quot;);</b>
+<b class="nc">&nbsp;            String response = restTemplate.postForObject(apiUrl + &quot;/chat/completions&quot;, request, String.class);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (response != null &amp;&amp; !response.isEmpty()) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;Successfully connected to NVIDIA AI API&quot;);</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return false;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Failed to connect to NVIDIA AI API: {}&quot;, e.getMessage());</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Getter for testing purposes
+&nbsp;    public double getTraditionalMatchScore(QuizSubmissionDTO user1, QuizSubmissionDTO user2) {
+<b class="nc">&nbsp;        return calculateTraditionalMatchScore(user1, user2);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

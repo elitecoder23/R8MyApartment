@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/roommate_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="Username"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_star_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Star Rating"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_morning_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Morning Person"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_hosting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hosting"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_liking_pets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Liking Pets"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_smoking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smoking"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_organization_skills"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organization Skills"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_people_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="People Over"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_noise_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Noise Level"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/roommate_cleanliness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cleanliness"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+</LinearLayout>

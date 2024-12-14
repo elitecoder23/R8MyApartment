@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (mk12.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    22.2%
+  </span>
+  <span class="absValue">
+    (2/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5%
+  </span>
+  <span class="absValue">
+    (2/40)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    22.2%
+  </span>
+  <span class="absValue">
+    (2/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5%
+  </span>
+  <span class="absValue">
+    (2/40)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.model.User;
+&nbsp;import mk12.repository.IUserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="fc">&nbsp;public class UserService {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(UserService.class);</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IUserRepository userRepository;
+&nbsp;
+&nbsp;    public User createUser(User user) {
+<b class="nc">&nbsp;        logger.info(&quot;Attempting to create user: {}&quot;, user.getUsername());</b>
+<b class="nc">&nbsp;        User savedUser = userRepository.save(user);</b>
+<b class="nc">&nbsp;        logger.info(&quot;User saved with username: {}&quot;, savedUser.getUsername());</b>
+<b class="nc">&nbsp;        return savedUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;User&gt; getAllUsers() {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving all users&quot;);</b>
+<b class="nc">&nbsp;        return userRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User getUserByUsername(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving user with username: {}&quot;, username);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; user = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        return user.orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User updateUser(String username, User userDetails) {
+<b class="nc">&nbsp;        logger.info(&quot;Updating user with username: {}&quot;, username);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; optionalUser = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        if (optionalUser.isPresent()) {</b>
+<b class="nc">&nbsp;            User existingUser = optionalUser.get();</b>
+<b class="nc">&nbsp;            existingUser.setUsername(userDetails.getUsername());</b>
+<b class="nc">&nbsp;            existingUser.setFirstName(userDetails.getFirstName());</b>
+<b class="nc">&nbsp;            existingUser.setLastName(userDetails.getLastName());</b>
+<b class="nc">&nbsp;            existingUser.setEmail(userDetails.getEmail());</b>
+<b class="nc">&nbsp;            existingUser.setBirthDate(userDetails.getBirthDate());</b>
+<b class="nc">&nbsp;            existingUser.setPhoneNumber(userDetails.getPhoneNumber());</b>
+<b class="nc">&nbsp;            existingUser.setPassword(userDetails.getPassword());</b>
+<b class="nc">&nbsp;            return userRepository.save(existingUser);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean deleteUser(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Deleting user with username: {}&quot;, username);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; optionalUser = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        if (optionalUser.isPresent()) {</b>
+<b class="nc">&nbsp;            userRepository.deleteByUsername(username);</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User addFriend(String username, String friendUsername) {
+<b class="nc">&nbsp;        Optional&lt;User&gt; userOptional = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; friendOptional = userRepository.findByUsername(friendUsername);</b>
+<b class="nc">&nbsp;        if (userOptional.isPresent() &amp;&amp; friendOptional.isPresent()) {</b>
+<b class="nc">&nbsp;            User user = userOptional.get();</b>
+<b class="nc">&nbsp;            User friend = friendOptional.get();</b>
+<b class="nc">&nbsp;            user.getFriends().add(friend);</b>
+<b class="nc">&nbsp;            userRepository.save(user);</b>
+<b class="nc">&nbsp;            return user;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public User getUserById(int l) {
+<b class="nc">&nbsp;        return userRepository.findById(l).orElse(null);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

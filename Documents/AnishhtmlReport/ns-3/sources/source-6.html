@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ReviewController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: ReviewController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ReviewController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.5%
+  </span>
+  <span class="absValue">
+    (1/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import mk12.dto.ReviewDTO;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import mk12.model.Review;
+&nbsp;import mk12.repository.IApartmentRepository;
+&nbsp;import mk12.service.ReviewService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/reviews&quot;)
+<b class="fc">&nbsp;public class ReviewController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ReviewService reviewService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IApartmentRepository apartmentRepository;
+&nbsp;
+&nbsp;    @PostMapping(&quot;/addReview&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addReview(@RequestBody Review review) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Apartment apartment = apartmentRepository.findById(review.getApartment().getId())</b>
+<b class="nc">&nbsp;                    .orElse(null);</b>
+<b class="nc">&nbsp;            if (apartment == null) {</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(&quot;Apartment not found&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            review.setApartment(apartment);</b>
+<b class="nc">&nbsp;            Review createdReview = reviewService.addReview(review);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(createdReview, HttpStatus.CREATED);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getAllReviews&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAllReviews() {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReviewDTO&gt; reviews = reviewService.getAllReviews();</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(reviews, HttpStatus.OK);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getAverageRating&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAverageRating(@RequestParam String apartmentName) {
+&nbsp;        try {
+<b class="nc">&nbsp;            double averageRating = reviewService.getAverageRating(apartmentName);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(averageRating, HttpStatus.OK);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    @GetMapping(&quot;/getReviewsByApartmentName&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getReviewsByApartmentName(@RequestParam String apartmentName) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReviewDTO&gt; reviews = reviewService.getReviewsByApartmentName(apartmentName);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(reviews, HttpStatus.OK);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    @PutMapping(&quot;/editReview&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; editReview(@RequestParam int reviewId, @RequestBody Review updatedReview) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Optional&lt;Review&gt; optionalReview = reviewService.findReviewById(reviewId);</b>
+<b class="nc">&nbsp;            if (optionalReview.isEmpty()) {</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(&quot;Review not found&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            Review review = optionalReview.get();</b>
+<b class="nc">&nbsp;            review.setComment(updatedReview.getComment());</b>
+<b class="nc">&nbsp;            review.setRating(updatedReview.getRating());</b>
+<b class="nc">&nbsp;            review.setReviewText(updatedReview.getReviewText());</b>
+&nbsp;
+<b class="nc">&nbsp;            Review savedReview = reviewService.addReview(review);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(savedReview, HttpStatus.OK);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/deleteReview&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteReview(@RequestParam int reviewId) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Optional&lt;Review&gt; optionalReview = reviewService.findReviewById(reviewId);</b>
+<b class="nc">&nbsp;            if (optionalReview.isEmpty()) {</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(&quot;Review not found&quot;, HttpStatus.NOT_FOUND);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            reviewService.deleteReview(optionalReview.get());</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;Review deleted successfully&quot;, HttpStatus.OK);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(&quot;An error occurred: &quot; + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

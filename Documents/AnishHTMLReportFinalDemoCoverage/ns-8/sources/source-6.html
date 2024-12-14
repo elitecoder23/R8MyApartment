@@ -1,0 +1,95 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IReportRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IReportRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IReportRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.Report;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface IReportRepository extends JpaRepository&lt;Report, Long&gt; {
+&nbsp;    // Find reports by apartment owner email
+&nbsp;    List&lt;Report&gt; findByApartmentOwnerEmail(String ownerEmail);
+&nbsp;
+&nbsp;    // Find reports by apartment name
+&nbsp;    List&lt;Report&gt; findByApartmentName(String apartmentName);
+&nbsp;
+&nbsp;    // Find reports by status
+&nbsp;    List&lt;Report&gt; findByStatus(Report.ReportStatus status);
+&nbsp;
+&nbsp;    // Find reports by apartment owner email and status
+&nbsp;    List&lt;Report&gt; findByApartmentOwnerEmailAndStatus(String ownerEmail, Report.ReportStatus status);
+&nbsp;
+&nbsp;    // Find reports by apartment name and owner email
+&nbsp;    List&lt;Report&gt; findByApartmentNameAndApartmentOwnerEmail(String apartmentName, String ownerEmail);
+&nbsp;
+&nbsp;    // Delete reports by apartment name
+&nbsp;    void deleteByApartmentName(String apartmentName);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

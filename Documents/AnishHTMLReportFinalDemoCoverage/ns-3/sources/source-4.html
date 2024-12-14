@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApartmentOwnerController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: ApartmentOwnerController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApartmentOwnerController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import mk12.dto.ApartmentOwnerDTO;
+&nbsp;import mk12.dto.LoginDTO;
+&nbsp;import mk12.dto.LoginResponse;
+&nbsp;import mk12.service.ApartmentOwnerService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * REST controller for managing apartment owners.
+&nbsp; * Provides endpoints for registering and logging in apartment owners.
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/owners&quot;)
+&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+&nbsp;@Tag(name = &quot;Apartment Owner Management&quot;,
+&nbsp;        description = &quot;APIs for apartment owner registration and authentication&quot;)
+<b class="fc">&nbsp;public class ApartmentOwnerController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ApartmentOwnerService ownerService;
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Register new apartment owner&quot;,
+&nbsp;            description = &quot;Creates a new apartment owner account with the provided details and returns authentication information&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Owner successfully registered&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid input data or username already exists&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = String.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = String.class)))
+&nbsp;    })
+&nbsp;    @PostMapping(&quot;/register&quot;)
+&nbsp;    public ResponseEntity&lt;LoginResponse&gt; registerOwner(
+&nbsp;            @Parameter(description = &quot;Owner registration details&quot;,
+&nbsp;                    required = true,
+&nbsp;                    schema = @Schema(implementation = ApartmentOwnerDTO.class))
+&nbsp;            @RequestBody ApartmentOwnerDTO ownerDTO) {
+<b class="fc">&nbsp;        return ResponseEntity.ok(ownerService.registerOwner(ownerDTO));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Login apartment owner&quot;,
+&nbsp;            description = &quot;Authenticates an existing apartment owner and returns authentication token&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Successfully authenticated&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;401&quot;,
+&nbsp;                    description = &quot;Invalid credentials&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = String.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;User not found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = String.class))),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;,
+&nbsp;                    description = &quot;Internal server error&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = String.class)))
+&nbsp;    })
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    public ResponseEntity&lt;LoginResponse&gt; loginOwner(
+&nbsp;            @Parameter(description = &quot;Owner login credentials&quot;,
+&nbsp;                    required = true,
+&nbsp;                    schema = @Schema(implementation = LoginDTO.class))
+&nbsp;            @RequestBody LoginDTO loginDTO) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(ownerService.loginOwner(loginDTO));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

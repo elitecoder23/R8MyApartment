@@ -1,0 +1,231 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OwnerReportController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: OwnerReportController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OwnerReportController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (3/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import mk12.dto.ReportDTO;
+&nbsp;import mk12.model.Report;
+&nbsp;import mk12.service.OwnerReportService;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/owners/reports&quot;)
+&nbsp;@CrossOrigin(origins = &quot;*&quot;)
+&nbsp;@Tag(name = &quot;Owner Report Management&quot;, description = &quot;APIs for owners to manage reports on their listings&quot;)
+&nbsp;public class OwnerReportController {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(OwnerReportController.class);</b>
+&nbsp;
+&nbsp;    private final OwnerReportService ownerReportService;
+&nbsp;
+<b class="fc">&nbsp;    public OwnerReportController(OwnerReportService ownerReportService) {</b>
+<b class="fc">&nbsp;        this.ownerReportService = ownerReportService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get all reports for owner&#39;s listings&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Reports retrieved successfully&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Owner not found&quot;)
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/{ownerEmail}/all&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAllOwnerReports(
+&nbsp;            @Parameter(description = &quot;Email of the apartment owner&quot;, required = true)
+&nbsp;            @PathVariable String ownerEmail) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReportDTO&gt; reports = ownerReportService.getReportsByOwner(ownerEmail);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(createResponse(true, reports, null));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest()</b>
+<b class="nc">&nbsp;                    .body(createResponse(false, null, e.getMessage()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get pending reports for owner&#39;s listings&quot;)
+&nbsp;    @GetMapping(&quot;/{ownerEmail}/pending&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getPendingOwnerReports(
+&nbsp;            @PathVariable String ownerEmail) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReportDTO&gt; reports = ownerReportService.getPendingReportsByOwner(ownerEmail);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(createResponse(true, reports, null));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest()</b>
+<b class="nc">&nbsp;                    .body(createResponse(false, null, e.getMessage()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Add owner response to a report&quot;)
+&nbsp;    @PutMapping(&quot;/{reportId}/respond&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; respondToReport(
+&nbsp;            @PathVariable Long reportId,
+&nbsp;            @RequestParam String ownerEmail,
+&nbsp;            @RequestBody String response) {
+&nbsp;        try {
+<b class="nc">&nbsp;            ReportDTO report = ownerReportService.addOwnerResponse(reportId, ownerEmail, response);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(createResponse(true, report, &quot;Response added successfully&quot;));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest()</b>
+<b class="nc">&nbsp;                    .body(createResponse(false, null, e.getMessage()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get reports by status for owner&quot;)
+&nbsp;    @GetMapping(&quot;/{ownerEmail}/status/{status}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getOwnerReportsByStatus(
+&nbsp;            @PathVariable String ownerEmail,
+&nbsp;            @PathVariable Report.ReportStatus status) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReportDTO&gt; reports = ownerReportService.getReportsByOwnerAndStatus(ownerEmail, status);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(createResponse(true, reports, null));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest()</b>
+<b class="nc">&nbsp;                    .body(createResponse(false, null, e.getMessage()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get reports for specific apartment&quot;)
+&nbsp;    @GetMapping(&quot;/apartment/{apartmentName}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getReportsForApartment(
+&nbsp;            @PathVariable String apartmentName,
+&nbsp;            @RequestParam String ownerEmail) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;ReportDTO&gt; reports = ownerReportService.getReportsByApartmentAndOwner(</b>
+&nbsp;                    apartmentName, ownerEmail);
+<b class="nc">&nbsp;            return ResponseEntity.ok(createResponse(true, reports, null));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest()</b>
+<b class="nc">&nbsp;                    .body(createResponse(false, null, e.getMessage()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Map&lt;String, Object&gt; createResponse(boolean success, Object data, String message) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        response.put(&quot;success&quot;, success);</b>
+<b class="nc">&nbsp;        if (data != null) response.put(&quot;data&quot;, data);</b>
+<b class="nc">&nbsp;        if (message != null) response.put(&quot;message&quot;, message);</b>
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

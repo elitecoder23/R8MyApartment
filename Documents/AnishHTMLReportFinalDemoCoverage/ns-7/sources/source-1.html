@@ -1,0 +1,338 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AdminService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: AdminService (mk12.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AdminService</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (4/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.3%
+  </span>
+  <span class="absValue">
+    (36/102)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AdminService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (4/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.3%
+  </span>
+  <span class="absValue">
+    (36/102)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.dto.AdminLoginDTO;
+&nbsp;import mk12.dto.LoginResponse;
+&nbsp;import mk12.dto.ReportDTO;
+&nbsp;import mk12.model.AdminUser;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import mk12.model.Report;
+&nbsp;import mk12.repository.*;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.data.domain.Page;
+&nbsp;import org.springframework.data.domain.PageImpl;
+&nbsp;import org.springframework.data.domain.Pageable;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+&nbsp;public class AdminService {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);</b>
+&nbsp;
+&nbsp;    private final IAdminRepository adminRepository;
+&nbsp;    private final IReportRepository reportRepository;
+&nbsp;    private final IApartmentRepository apartmentRepository;
+&nbsp;    private final IApartmentApplicationRepository applicationRepository;
+&nbsp;    private final IReviewRepository reviewRepository;
+&nbsp;    private final PasswordEncoder passwordEncoder;
+&nbsp;    private final JwtService jwtService;
+&nbsp;
+&nbsp;    public AdminService(IAdminRepository adminRepository,
+&nbsp;                        IReportRepository reportRepository,
+&nbsp;                        IApartmentRepository apartmentRepository,
+&nbsp;                        IApartmentApplicationRepository applicationRepository,
+&nbsp;                        IReviewRepository reviewRepository,
+&nbsp;                        PasswordEncoder passwordEncoder,
+<b class="fc">&nbsp;                        JwtService jwtService) {</b>
+<b class="fc">&nbsp;        this.adminRepository = adminRepository;</b>
+<b class="fc">&nbsp;        this.reportRepository = reportRepository;</b>
+<b class="fc">&nbsp;        this.apartmentRepository = apartmentRepository;</b>
+<b class="fc">&nbsp;        this.applicationRepository = applicationRepository;</b>
+<b class="fc">&nbsp;        this.reviewRepository = reviewRepository;</b>
+<b class="fc">&nbsp;        this.passwordEncoder = passwordEncoder;</b>
+<b class="fc">&nbsp;        this.jwtService = jwtService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LoginResponse createAdmin(AdminLoginDTO signupDTO) {
+<b class="fc">&nbsp;        logger.info(&quot;Attempting to create new admin with email: {}&quot;, signupDTO.getEmail());</b>
+&nbsp;
+<b class="pc">&nbsp;        if (adminRepository.findByEmail(signupDTO.getEmail()).isPresent()) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Admin already exists with email: {}&quot;, signupDTO.getEmail());</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Admin already exists with this email&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            AdminUser admin = new AdminUser();</b>
+<b class="fc">&nbsp;            admin.setEmail(signupDTO.getEmail());</b>
+<b class="fc">&nbsp;            admin.setPassword(passwordEncoder.encode(signupDTO.getPassword()));</b>
+<b class="fc">&nbsp;            admin.setName(signupDTO.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;            admin = adminRepository.save(admin);</b>
+<b class="fc">&nbsp;            String token = jwtService.generateToken(admin.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;            LoginResponse response = new LoginResponse();</b>
+<b class="fc">&nbsp;            response.setToken(token);</b>
+<b class="fc">&nbsp;            response.setEmail(admin.getEmail());</b>
+<b class="fc">&nbsp;            response.setName(admin.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;            logger.info(&quot;Successfully created admin account for: {}&quot;, signupDTO.getEmail());</b>
+<b class="fc">&nbsp;            return response;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error creating admin account: {}&quot;, e.getMessage());</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Failed to create admin account: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public LoginResponse loginAdmin(AdminLoginDTO loginDTO) {
+<b class="fc">&nbsp;        logger.info(&quot;Attempting admin login for email: {}&quot;, loginDTO.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;        AdminUser admin = adminRepository.findByEmail(loginDTO.getEmail())</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="nc">&nbsp;                    logger.error(&quot;Admin not found with email: {}&quot;, loginDTO.getEmail());</b>
+<b class="nc">&nbsp;                    return new RuntimeException(&quot;Invalid credentials&quot;);</b>
+&nbsp;                });
+&nbsp;
+<b class="fc">&nbsp;        if (!passwordEncoder.matches(loginDTO.getPassword(), admin.getPassword())) {</b>
+<b class="fc">&nbsp;            logger.error(&quot;Invalid password for admin: {}&quot;, loginDTO.getEmail());</b>
+<b class="fc">&nbsp;            throw new RuntimeException(&quot;Invalid credentials&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String token = jwtService.generateToken(admin.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;        LoginResponse response = new LoginResponse();</b>
+<b class="fc">&nbsp;        response.setToken(token);</b>
+<b class="fc">&nbsp;        response.setEmail(admin.getEmail());</b>
+<b class="fc">&nbsp;        response.setName(admin.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.info(&quot;Admin login successful for: {}&quot;, loginDTO.getEmail());</b>
+<b class="fc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Page&lt;ReportDTO&gt; getAllReports(Pageable pageable) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving all reports with pagination&quot;);</b>
+<b class="nc">&nbsp;        Page&lt;Report&gt; reportPage = reportRepository.findAll(pageable);</b>
+<b class="nc">&nbsp;        List&lt;ReportDTO&gt; reportDTOs = reportPage.getContent().stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        return new PageImpl&lt;&gt;(reportDTOs, pageable, reportPage.getTotalElements());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Page&lt;ReportDTO&gt; getReportsByStatus(Report.ReportStatus status, Pageable pageable) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving reports with status: {}&quot;, status);</b>
+<b class="nc">&nbsp;        List&lt;Report&gt; reports = reportRepository.findByStatus(status);</b>
+<b class="nc">&nbsp;        List&lt;ReportDTO&gt; reportDTOs = reports.stream()</b>
+<b class="nc">&nbsp;                .map(this::convertToDTO)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;
+<b class="nc">&nbsp;        int start = (int) pageable.getOffset();</b>
+<b class="nc">&nbsp;        int end = Math.min((start + pageable.getPageSize()), reportDTOs.size());</b>
+&nbsp;
+<b class="nc">&nbsp;        return new PageImpl&lt;&gt;(</b>
+<b class="nc">&nbsp;                reportDTOs.subList(start, end),</b>
+&nbsp;                pageable,
+<b class="nc">&nbsp;                reportDTOs.size()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public ReportDTO updateReportStatus(Long id, Report.ReportStatus status) {
+<b class="nc">&nbsp;        logger.info(&quot;Updating report status. ID: {}, New Status: {}&quot;, id, status);</b>
+&nbsp;
+<b class="nc">&nbsp;        Report report = reportRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="nc">&nbsp;                    logger.error(&quot;Report not found with ID: {}&quot;, id);</b>
+<b class="nc">&nbsp;                    return new RuntimeException(&quot;Report not found&quot;);</b>
+&nbsp;                });
+&nbsp;
+<b class="nc">&nbsp;        report.setStatus(status);</b>
+<b class="nc">&nbsp;        Report updatedReport = reportRepository.save(report);</b>
+<b class="nc">&nbsp;        logger.info(&quot;Successfully updated report status. ID: {}&quot;, id);</b>
+<b class="nc">&nbsp;        return convertToDTO(updatedReport);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public void deleteApartment(String apartmentName) {
+<b class="nc">&nbsp;        logger.info(&quot;Attempting to delete apartment: {}&quot;, apartmentName);</b>
+&nbsp;
+<b class="nc">&nbsp;        Optional&lt;Apartment&gt; apartment = apartmentRepository.findByName(apartmentName);</b>
+<b class="nc">&nbsp;        if (apartment.isEmpty()) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Apartment listing not found: {}&quot;, apartmentName);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Apartment listing not found: &quot; + apartmentName);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        try {
+&nbsp;            // Delete all applications
+<b class="nc">&nbsp;            applicationRepository.findByApartmentName(apartmentName)</b>
+<b class="nc">&nbsp;                    .forEach(application -&gt; {</b>
+<b class="nc">&nbsp;                        logger.debug(&quot;Deleting application ID: {}&quot;, application.getId());</b>
+<b class="nc">&nbsp;                        applicationRepository.delete(application);</b>
+&nbsp;                    });
+<b class="nc">&nbsp;            logger.info(&quot;Deleted all applications for apartment: {}&quot;, apartmentName);</b>
+&nbsp;
+&nbsp;            // Delete all reports
+<b class="nc">&nbsp;            reportRepository.findByApartmentName(apartmentName)</b>
+<b class="nc">&nbsp;                    .forEach(report -&gt; {</b>
+<b class="nc">&nbsp;                        logger.debug(&quot;Deleting report ID: {}&quot;, report.getId());</b>
+<b class="nc">&nbsp;                        reportRepository.delete(report);</b>
+&nbsp;                    });
+<b class="nc">&nbsp;            logger.info(&quot;Deleted all reports for apartment: {}&quot;, apartmentName);</b>
+&nbsp;
+&nbsp;            // Delete all reviews
+<b class="nc">&nbsp;            reviewRepository.findByApartment_Name(apartmentName)</b>
+<b class="nc">&nbsp;                    .forEach(review -&gt; {</b>
+<b class="nc">&nbsp;                        logger.debug(&quot;Deleting review ID: {}&quot;, review.getId());</b>
+<b class="nc">&nbsp;                        reviewRepository.delete(review);</b>
+&nbsp;                    });
+<b class="nc">&nbsp;            logger.info(&quot;Deleted all reviews for apartment: {}&quot;, apartmentName);</b>
+&nbsp;
+&nbsp;            // Finally delete the apartment
+<b class="nc">&nbsp;            apartmentRepository.delete(apartment.get());</b>
+<b class="nc">&nbsp;            logger.info(&quot;Successfully deleted apartment: {}&quot;, apartmentName);</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error occurred while deleting apartment: {}&quot;, apartmentName, e);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Failed to delete apartment: &quot; + e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private ReportDTO convertToDTO(Report report) {
+<b class="nc">&nbsp;        ReportDTO dto = new ReportDTO();</b>
+<b class="nc">&nbsp;        dto.setId(report.getId());</b>
+<b class="nc">&nbsp;        dto.setReporterUsername(report.getReporterUsername());</b>
+<b class="nc">&nbsp;        dto.setReporterEmail(report.getReporterEmail());</b>
+<b class="nc">&nbsp;        dto.setReason(report.getReason());</b>
+<b class="nc">&nbsp;        dto.setApartmentName(report.getApartment().getName());</b>
+<b class="nc">&nbsp;        dto.setStatus(report.getStatus());</b>
+<b class="nc">&nbsp;        dto.setReportDate(report.getReportDate().toString());</b>
+<b class="nc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

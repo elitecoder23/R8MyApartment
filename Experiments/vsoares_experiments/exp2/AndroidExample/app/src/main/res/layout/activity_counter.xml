@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#227027"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="150sp" />
+
+    <Button
+        android:id="@+id/timer_start_btn"
+
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="Start"
+        android:textSize="50sp"
+        android:fontFamily="monospace"
+        android:textColor="@color/black"
+
+        />
+
+    <Button
+        android:id="@+id/timer_stop_btn"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Stop"
+        android:textSize="50sp"
+        android:fontFamily="monospace"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/timer_reset_btn"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="0dp"
+        android:text="Reset"
+        android:textSize="25sp"
+        android:fontFamily="monospace"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/counter_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Back to Main"
+        android:fontFamily="monospace"
+        android:textColor="@color/black"
+        >
+
+    </Button>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

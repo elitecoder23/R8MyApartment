@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApartmentApplicationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ApartmentApplicationService (mk12.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApartmentApplicationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.6%
+  </span>
+  <span class="absValue">
+    (2/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.6%
+  </span>
+  <span class="absValue">
+    (2/36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.model.ApartmentApplication;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import mk12.model.User;
+&nbsp;import mk12.repository.IApartmentApplicationRepository;
+&nbsp;import mk12.repository.IApartmentRepository;
+&nbsp;import mk12.repository.IUserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class ApartmentApplicationService {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(ApartmentApplicationService.class);</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IApartmentApplicationRepository applicationRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IApartmentRepository apartmentRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IUserRepository userRepository;
+&nbsp;
+&nbsp;    public ApartmentApplication submitApplication(String apartmentName, String username, ApartmentApplication application) {
+<b class="nc">&nbsp;        Optional&lt;Apartment&gt; apartment = apartmentRepository.findByName(apartmentName);</b>
+<b class="nc">&nbsp;        Optional&lt;User&gt; user = userRepository.findByUsername(username);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (apartment.isEmpty()) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Apartment not found: {}&quot;, apartmentName);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Apartment not found: &quot; + apartmentName);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (user.isEmpty()) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;User not found: {}&quot;, username);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;User not found: &quot; + username);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Check if user already has a pending application for this apartment
+<b class="nc">&nbsp;        Optional&lt;ApartmentApplication&gt; existingApplication =</b>
+<b class="nc">&nbsp;                applicationRepository.findByApartmentNameAndUserUsername(apartmentName, username);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (existingApplication.isPresent() &amp;&amp;</b>
+<b class="nc">&nbsp;                existingApplication.get().getStatus() == ApartmentApplication.ApplicationStatus.PENDING) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;User {} already has a pending application for {}&quot;, username, apartmentName);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Already have a pending application for this apartment&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        application.setApartment(apartment.get());</b>
+<b class="nc">&nbsp;        application.setUser(user.get());</b>
+<b class="nc">&nbsp;        application.setStatus(ApartmentApplication.ApplicationStatus.PENDING);</b>
+&nbsp;
+<b class="nc">&nbsp;        logger.info(&quot;Submitting application for user {} to apartment {}&quot;, username, apartmentName);</b>
+<b class="nc">&nbsp;        return applicationRepository.save(application);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ApartmentApplication updateApplicationStatus(String apartmentName, String username,
+&nbsp;                                                        ApartmentApplication.ApplicationStatus status) {
+<b class="nc">&nbsp;        Optional&lt;ApartmentApplication&gt; application =</b>
+<b class="nc">&nbsp;                applicationRepository.findByApartmentNameAndUserUsername(apartmentName, username);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (application.isEmpty()) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Application not found for apartment {} and user {}&quot;, apartmentName, username);</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Application not found&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        ApartmentApplication existingApplication = application.get();</b>
+<b class="nc">&nbsp;        existingApplication.setStatus(status);</b>
+&nbsp;
+<b class="nc">&nbsp;        logger.info(&quot;Updating application status to {} for user {} apartment {}&quot;,</b>
+&nbsp;                status, username, apartmentName);
+<b class="nc">&nbsp;        return applicationRepository.save(existingApplication);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ApartmentApplication&gt; getUserApplications(String username) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving applications for user {}&quot;, username);</b>
+<b class="nc">&nbsp;        return applicationRepository.findByUserUsername(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ApartmentApplication&gt; getOwnerApplications(String ownerEmail) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving applications for owner {}&quot;, ownerEmail);</b>
+<b class="nc">&nbsp;        return applicationRepository.findByApartmentOwnerEmail(ownerEmail);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ApartmentApplication&gt; getApplicationsForApartment(String apartmentName) {
+<b class="nc">&nbsp;        logger.info(&quot;Retrieving applications for apartment {}&quot;, apartmentName);</b>
+<b class="nc">&nbsp;        return applicationRepository.findByApartmentName(apartmentName);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

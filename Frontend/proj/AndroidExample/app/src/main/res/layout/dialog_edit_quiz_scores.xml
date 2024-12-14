@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Night or Day" />
+    <SeekBar
+        android:id="@+id/seekBarNightOrDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewNightOrDayValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hosting" />
+    <SeekBar
+        android:id="@+id/seekBarHosting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewHostingValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pet" />
+    <SeekBar
+        android:id="@+id/seekBarPet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewPetValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Smoking" />
+    <SeekBar
+        android:id="@+id/seekBarSmoking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewSmokingValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Organized" />
+    <SeekBar
+        android:id="@+id/seekBarOrganized"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewOrganizedValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guests Over" />
+    <SeekBar
+        android:id="@+id/seekBarGuestsOver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewGuestsOverValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Noise" />
+    <SeekBar
+        android:id="@+id/seekBarNoise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewNoiseValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cleanliness" />
+    <SeekBar
+        android:id="@+id/seekBarCleanliness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10" />
+    <TextView
+        android:id="@+id/textViewCleanlinessValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+</LinearLayout>

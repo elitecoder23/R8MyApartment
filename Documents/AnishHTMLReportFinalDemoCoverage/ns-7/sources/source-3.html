@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApartmentOwnerService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ApartmentOwnerService (mk12.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApartmentOwnerService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    56.2%
+  </span>
+  <span class="absValue">
+    (9/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.service;
+&nbsp;
+&nbsp;import mk12.model.ApartmentOwner;
+&nbsp;import mk12.dto.ApartmentOwnerDTO;
+&nbsp;import mk12.dto.LoginDTO;
+&nbsp;import mk12.dto.LoginResponse;
+&nbsp;import mk12.exception.AuthenticationException;
+&nbsp;import mk12.repository.IApartmentOwnerRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service class for managing apartment owners.
+&nbsp; * Provides methods for registering and logging in apartment owners.
+&nbsp; */
+&nbsp;@Service
+<b class="fc">&nbsp;public class ApartmentOwnerService {</b>
+&nbsp;    @Autowired
+&nbsp;    private IApartmentOwnerRepository ownerRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PasswordEncoder passwordEncoder;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private JwtService jwtService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Registers a new apartment owner.
+&nbsp;     *
+&nbsp;     * @param ownerDTO the data transfer object containing the owner&#39;s details
+&nbsp;     * @return a LoginResponse containing the registered owner&#39;s details and a JWT token
+&nbsp;     * @throws AuthenticationException if the email is already registered
+&nbsp;     */
+&nbsp;    public LoginResponse registerOwner(ApartmentOwnerDTO ownerDTO) {
+<b class="pc">&nbsp;        if (ownerRepository.findByEmail(ownerDTO.getEmail()).isPresent()) {</b>
+<b class="nc">&nbsp;            throw new AuthenticationException(&quot;Email already registered&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        ApartmentOwner owner = new ApartmentOwner();</b>
+<b class="fc">&nbsp;        owner.setEmail(ownerDTO.getEmail());</b>
+<b class="fc">&nbsp;        owner.setPassword(passwordEncoder.encode(ownerDTO.getPassword()));</b>
+<b class="fc">&nbsp;        owner.setName(ownerDTO.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;        owner = ownerRepository.save(owner);</b>
+<b class="fc">&nbsp;        String token = jwtService.generateToken(owner.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;        return LoginResponse.from(owner, token);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Logs in an apartment owner.
+&nbsp;     *
+&nbsp;     * @param loginDTO the data transfer object containing the login details
+&nbsp;     * @return a LoginResponse containing the logged-in owner&#39;s details and a JWT token
+&nbsp;     * @throws AuthenticationException if the credentials are invalid
+&nbsp;     */
+&nbsp;    public LoginResponse loginOwner(LoginDTO loginDTO) {
+<b class="nc">&nbsp;        ApartmentOwner owner = ownerRepository.findByEmail(loginDTO.getEmail())</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new AuthenticationException(&quot;Invalid credentials&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        if (!passwordEncoder.matches(loginDTO.getPassword(), owner.getPassword())) {</b>
+<b class="nc">&nbsp;            throw new AuthenticationException(&quot;Invalid credentials&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String token = jwtService.generateToken(owner.getEmail());</b>
+<b class="nc">&nbsp;        return LoginResponse.from(owner, token);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

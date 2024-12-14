@@ -1,0 +1,245 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FriendRequestServer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12</a>
+</div>
+
+<h1>Coverage Summary for Class: FriendRequestServer (mk12)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FriendRequestServer</td>
+<td class="coverageStat">
+  <span class="percent">
+    37.5%
+  </span>
+  <span class="absValue">
+    (3/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.5%
+  </span>
+  <span class="absValue">
+    (5/27)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FriendRequestServer$FriendRequestMessage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (3/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.1%
+  </span>
+  <span class="absValue">
+    (5/31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12;
+&nbsp;
+&nbsp;
+&nbsp;import jakarta.websocket.*;
+&nbsp;import jakarta.websocket.server.PathParam;
+&nbsp;import jakarta.websocket.server.ServerEndpoint;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.Setter;
+&nbsp;import mk12.model.FriendRequest;
+&nbsp;import mk12.service.FriendRequestService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;@Component
+&nbsp;@ServerEndpoint(&quot;/ws/NewReq/{username}&quot;)
+<b class="fc">&nbsp;public class FriendRequestServer {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger LOGGER = Logger.getLogger(FriendRequestServer.class.getName());</b>
+<b class="fc">&nbsp;    private static final ConcurrentHashMap&lt;String, Session&gt; sessions = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    private static Map&lt;String, Session&gt; usernameSessionMap= new Hashtable&lt;&gt;();</b>
+&nbsp;    private static FriendRequestService friendRequestService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setFriendRequestService(FriendRequestService friendRequestService) {
+<b class="fc">&nbsp;        FriendRequestServer.friendRequestService = friendRequestService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) {
+<b class="nc">&nbsp;        sessions.put(username, session);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;User &quot; + username + &quot; is online&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnError
+&nbsp;    public void onError(Throwable throwable, Session session) {
+<b class="nc">&nbsp;        LOGGER.severe(&quot;Error occurred for session &quot; + session.getId() + &quot;: &quot; + throwable.getMessage());</b>
+<b class="nc">&nbsp;        throwable.printStackTrace();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session) {
+<b class="nc">&nbsp;        String username = sessions.keySet().stream()</b>
+<b class="nc">&nbsp;                .filter(key -&gt; sessions.get(key) == session)</b>
+<b class="nc">&nbsp;                .findFirst().orElse(null);</b>
+<b class="nc">&nbsp;        if (username != null) {</b>
+<b class="nc">&nbsp;            sessions.remove(username);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;User &quot; + username + &quot; has gone offline&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(String message, Session session) {
+&nbsp;            //message = &quot;sender,receiver&quot;
+<b class="nc">&nbsp;            String[] t = message.split(&quot;,&quot;);</b>
+<b class="nc">&nbsp;            String sender = t[0];</b>
+<b class="nc">&nbsp;            String receiver = t[1];</b>
+&nbsp;
+&nbsp;            // Store the friend request in the database
+<b class="nc">&nbsp;            friendRequestService.sendFriendRequest(sender, receiver);</b>
+&nbsp;
+&nbsp;            // Notify the receiver if they are online
+<b class="nc">&nbsp;            sendRequestToFriend(sender, receiver);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public void sendRequestToFriend(String fromUsername, String toUsername) {
+<b class="nc">&nbsp;        Session session = sessions.get(toUsername);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (session != null) {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(&quot;Friend request received from &quot; + fromUsername);</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Request sent to &quot; + toUsername);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                LOGGER.severe(&quot;Error sending request to &quot; + toUsername + &quot;: &quot; + e.getMessage());</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;User &quot; + toUsername + &quot; is offline&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    @Setter</b>
+&nbsp;    @Getter
+<b class="nc">&nbsp;    private static class FriendRequestMessage {</b>
+&nbsp;        // Getters and setters
+<b class="nc">&nbsp;        private String sender;</b>
+<b class="nc">&nbsp;        private String receiver;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

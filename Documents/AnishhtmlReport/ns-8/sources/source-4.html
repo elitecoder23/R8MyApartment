@@ -1,0 +1,95 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IUserRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IUserRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IUserRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.User;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for User entities.
+&nbsp; * Provides CRUD operations and methods to find and delete a user by their username.
+&nbsp; */
+&nbsp;public interface IUserRepository extends JpaRepository&lt;User, Integer&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a user by their username.
+&nbsp;     *
+&nbsp;     * @param username the username of the user
+&nbsp;     * @return an Optional containing the user if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;User&gt; findByUsername(String username);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a user by their username.
+&nbsp;     *
+&nbsp;     * @param username the username of the user to be deleted
+&nbsp;     */
+&nbsp;    void deleteByUsername(String username);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

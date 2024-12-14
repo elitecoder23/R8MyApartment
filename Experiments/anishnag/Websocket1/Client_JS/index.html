@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #33ffe9;
+            color: white;
+            padding: 1rem;
+        }
+
+        .connection-form {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        input {
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1557b0;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 1rem;
+            max-height: calc(100vh - 250px);
+        }
+
+        #log {
+            flex-grow: 1;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow-y: auto;
+            background: #fff;
+            font-family: monospace;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .message-form {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        #msg {
+            flex-grow: 1;
+        }
+
+        .status {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .connected {
+            color: #28a745;
+        }
+
+        .disconnected {
+            color: #dc3545;
+        }
+
+        .users-online {
+            padding: 0.5rem;
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .message {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 5px;
+        }
+
+        .message.system {
+            color: #666;
+            font-style: italic;
+        }
+
+        .message.dm {
+            background: #e3f2fd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>WebSocket Chat</h1>
+    </div>
+
+    <div class="connection-form">
+        <div class="input-group">
+            <input type="text" id="wsserver"
+                   placeholder="ws://localhost:8080/chat/"
+                   value="ws://localhost:8080/chat/1/"
+                   style="width: 250px;"/>
+        </div>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username" />
+            <button type="button" onclick="connect();" id="connectBtn">Connect</button>
+        </div>
+    </div>
+
+    <div id="status" class="status disconnected">Disconnected</div>
+
+    <div class="chat-container">
+        <div id="log"></div>
+    </div>
+
+    <div class="message-form">
+        <input type="text" id="msg" placeholder="Type your message... (Use @username for DM)" disabled />
+        <button type="button" onclick="send();" id="sendBtn" disabled>Send</button>
+    </div>
+</div>
+
+<script src="websocket.js"></script>
+</body>
+</html>

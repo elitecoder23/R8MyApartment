@@ -1,0 +1,542 @@
+[33mcommit e14fcb6ff764e5df7de9c235137c669bdbfa36fa[m[33m ([m[1;36mHEAD -> [m[1;32msignUpPageBackend[m[33m, [m[1;31morigin/signUpPageBackend[m[33m)[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 19:35:08 2024 -0500
+
+    added crudl functionality for sign up, also got remote server working
+
+[33mcommit 17c3b777cad8393dfb564bf4b277a9441ecf6bfb[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 15:51:28 2024 -0500
+
+    jar files, it is the wrong one though I need to change the run configuration
+
+[33mcommit 6a2896ac004edc1e852d59af5652daf3d5099c63[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 14:02:53 2024 -0500
+
+    added tag JSONIgnore to amenity list to stop search error and implemented basic CRUD operations for find roomate search
+
+[33mcommit d4ed85c94f5e360cc8f8c08357987e40c49f193b[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 13:08:13 2024 -0500
+
+    Added functionality to create apartment and then add amenities into each apartment, successfully stores in database
+
+[33mcommit 954803f010b2bb8e21ce66809debc0ccf509789f[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 03:07:29 2024 -0500
+
+    added logging functionality for mysql, code works to where I can do a post request to the server and it creates a user table and columns
+
+[33mcommit 882da401e56ff3cda668ef91ee987d4d2209d3f4[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Oct 11 00:47:57 2024 -0500
+
+    implemented User, UserService, UserRepository, and UserController without pom.xml related errors
+
+[33mcommit 4dea5caaf8e99f14ba5d12777047d0cfa2a154f5[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Oct 10 23:48:04 2024 -0500
+
+    Fixed the maven build pretty much everything kabir I need an extension on this
+
+[33mcommit cace2dc90a15c898346dc3297a181378148ac6ae[m[33m ([m[1;31morigin/loginPage[m[33m, [m[1;32mloginPage[m[33m)[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Oct 10 23:02:36 2024 -0500
+
+    update
+
+[33mcommit aa3178e02b1578a965e62e34de726994669e9305[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Wed Oct 9 22:46:13 2024 -0500
+
+    review page complete
+
+[33mcommit b3dd0a4e645217ddfeb943bd926f4d667171e426[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Mon Oct 7 21:20:12 2024 -0500
+
+    login page complete, review page almost complete
+
+[33mcommit c217fbe63ecadf3c401e4922dc27a348aaac24da[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Mon Oct 7 21:19:06 2024 -0500
+
+    added login and add review one to many
+
+[33mcommit 627eba2f079c7dc28fe876a636528691ade52ed6[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Fri Oct 4 16:00:27 2024 -0500
+
+    adding the login page
+
+[33mcommit 0e3c26e28e0dfaa47f8e895f6205fdb4e8347b21[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Oct 3 17:01:04 2024 -0500
+
+    got remote database setup and working
+
+[33mcommit 9d365c98ba532c863b602e8cd3856a39f6374b96[m
+Merge: 2c75654 9980791
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Oct 3 15:21:53 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit 2c756549eb6649cb8936c906320dae53867ba446[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Oct 3 15:21:43 2024 -0500
+
+    update
+
+[33mcommit 9980791c4ada7945e810a44c5725b46d09a3600d[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Wed Oct 2 11:11:32 2024 -0500
+
+     small changes
+
+[33mcommit 1821e0fc75db9b0ac43215e54810c6bcabc8cf1b[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Mon Sep 30 00:07:32 2024 -0500
+
+    added screen sketches pdf to documents folder
+
+[33mcommit 7d1da873c65a2041fb2cd5649e772725afb86049[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Tue Sep 24 23:43:29 2024 -0500
+
+    updated some folders to make things easier to read
+
+[33mcommit 9bdbe88547333e7f3ab64169c6c3eb965fcc6aa7[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Tue Sep 24 23:38:46 2024 -0500
+
+    put volley tutorials in folders and ran the tutorials on android studio
+
+[33mcommit c94c4831b3c2631d15296967e30b209ea6dacd7d[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 17:56:35 2024 -0500
+
+    post demo commit, all of my code for all of the experiments are in exp1. I will move the other experiments to exp2 and exp3 soon
+
+[33mcommit 068a13a5fcdbce433a29e11fdb9f79ba9dbd8e56[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 16:42:07 2024 -0500
+
+    implemented a way to list people and search for people
+
+[33mcommit 3a85dd56002d379985119c40c76ef3e97d16b0f4[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 15:37:17 2024 -0500
+
+    commenting code and reeducing redundancy
+
+[33mcommit 7e53575607b1613ccf1d84a0ac75bc7616408db7[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 15:19:57 2024 -0500
+
+    added functionality to delete people
+
+[33mcommit 61103f63f621584be962d41a25dab4b0d442d28e[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 14:45:16 2024 -0500
+
+    Created and implemented get and post
+
+[33mcommit fc26e9a6d52b24349f696fe744baa17b19e19e8c[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Sat Sep 14 13:09:50 2024 -0500
+
+    update before i work again
+
+[33mcommit f728af88eca12bd8037645af81ffcfac1a3e2431[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Fri Sep 13 12:31:40 2024 -0500
+
+    hello
+
+[33mcommit 68a334e1b8e2c36f68f8bb958c671b26c746b73c[m
+Merge: 2cc7f13 878c0fd
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Fri Sep 13 12:29:48 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit 2cc7f13eb48dca89df776b0855cc438ccb134321[m
+Merge: b364547 f27ba6c
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Fri Sep 13 12:29:30 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit b364547019f53aa3d9202a6741648ad8658d4f97[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Fri Sep 13 12:29:14 2024 -0500
+
+    hello
+
+[33mcommit 878c0fdd7a1f321d974286fef2af407016cf457b[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Sep 13 12:28:49 2024 -0500
+
+    I forgot what I did last night but I'm pushing
+
+[33mcommit f27ba6cc1b0bf5b1926c09e9a2e9447b2540f461[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 12:27:54 2024 -0500
+
+    all 3 experiments finished
+
+[33mcommit 2e8f26d275fd4f469ddedf60009f72e99c5191d9[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 12:12:35 2024 -0500
+
+    added comments to the code
+
+[33mcommit 6893e4d21fec170da3de80334cd43c18ec03b5f4[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 02:14:22 2024 -0500
+
+    finished exp3
+
+[33mcommit 56cc1e98474401c10ee3a9ea82908d8fc3186855[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 01:56:28 2024 -0500
+
+    finished login page
+
+[33mcommit 9ddc15ca53d901bb5f6c9163d00b3ade243f8625[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 01:30:35 2024 -0500
+
+    finished home page
+
+[33mcommit 19bd7c5af74cebadd695568cf973d8ff0be18822[m
+Author: vinimsoares <vinicius.malaman12@gmail.com>
+Date:   Fri Sep 13 00:55:55 2024 -0500
+
+    last one
+
+[33mcommit 2d3e44bad0f647c33db655a752a6d4f5f36dc4ac[m
+Author: vinimsoares <vinicius.malaman12@gmail.com>
+Date:   Fri Sep 13 00:24:40 2024 -0500
+
+    StopWatch
+
+[33mcommit b00fac9d9ddee49f106ab514c3f22ca770d8f69f[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Sep 13 00:11:14 2024 -0500
+
+    added api endpoint to controller but its not actually an api
+
+[33mcommit b4689e4f476f8257aa8397f8646fea477b57085b[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Fri Sep 13 00:09:38 2024 -0500
+
+    added image
+
+[33mcommit cf3c3b881951a49c3bf6dc6395962d225f217368[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Fri Sep 13 00:02:08 2024 -0500
+
+    welcome page
+
+[33mcommit 28a276b3089c8256b7120ae26684738424295805[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 23:58:02 2024 -0500
+
+    creating home page for CyFinder website
+
+[33mcommit 6ff7b2f05b8ffcd962b8dc3b232be05987c962e8[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 23:56:17 2024 -0500
+
+    trying out code and different requests, couldn't figure it out
+
+[33mcommit 45989c2dcc3514cb80a98cdacb0f26762a6b509e[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 23:22:31 2024 -0500
+
+    Finished Experiment2
+
+[33mcommit f27f9fd2c00b754f9d2648ad7647d23dfbfe1028[m
+Author: vinimsoares <vinicius.malaman12@gmail.com>
+Date:   Thu Sep 12 23:18:47 2024 -0500
+
+    First one
+
+[33mcommit f1d201ba51836b0d0b318107c19a62d5787969fb[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 22:11:39 2024 -0500
+
+    saving my progess for now
+
+[33mcommit 6393d2eb0f4cd5782e34a3b9c1ea8fd0ee82e1f8[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 22:05:53 2024 -0500
+
+    messing around with postman and peoplecontroller interaction
+
+[33mcommit e9b4f8a06d7eaee4fed248c15cbbe1cf7bda4537[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 21:49:09 2024 -0500
+
+    adding extra variables to person object, need to figure out peoplecontroller
+
+[33mcommit 8e51796e0c224d81b52d2f7570b5a0e7c10742a7[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Thu Sep 12 21:28:15 2024 -0500
+
+    still trying
+
+[33mcommit 287c0ebd5832c78eab263ec69b39036989c91fb6[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Thu Sep 12 21:19:52 2024 -0500
+
+    adding
+
+[33mcommit 505676199244b6d2d3da78506a5692ba24f93592[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 21:14:51 2024 -0500
+
+    changed api endpoint, imported extra libraries for functionality to experiment1
+
+[33mcommit 675923fca133533a905e7c8e8908ddbfb1cffd86[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 18:53:53 2024 -0500
+
+    updated the first screen with the correct text
+
+[33mcommit 73bcb3705a5519b8dffa867f44380ca93a29b6db[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 17:53:14 2024 -0500
+
+    Created exp2 folder and put correct tutorial
+
+[33mcommit 9790c9640b0d58a1d2c0117b9bed247871765726[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 17:43:05 2024 -0500
+
+    hi
+
+[33mcommit 471324228dcb2aa798e3759f81704da8349b69fe[m
+Merge: 25bf50b d58ffaf
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 17:42:32 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit d58ffafee0bf20629cdefb77fa60deae09309e7a[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 17:38:59 2024 -0500
+
+    idk
+
+[33mcommit 25bf50b1e4010fded4cca4a5e25161d20900445d[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 17:37:47 2024 -0500
+
+    hi
+
+[33mcommit 84ddb302144967fe868c541913b614e9be7345f0[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 17:37:17 2024 -0500
+
+    hi
+
+[33mcommit eae7014419bb5c7589f585bed967ae3674d9ffa0[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 17:33:02 2024 -0500
+
+    haha im so bad at this
+
+[33mcommit 632373bd3938e837009c5ff364e4d15d25d36254[m
+Merge: b6ea8c1 43757c2
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 17:30:44 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit b6ea8c156cf92de9438d9605e1bfb52148569535[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 17:28:04 2024 -0500
+
+    finished experiment 1
+
+[33mcommit 43757c2ea472eb16b613663072a8805dc1660275[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 17:26:22 2024 -0500
+
+    idk what im doing
+
+[33mcommit 21050b5510ad82ea04d217e82950e816a59a254a[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 17:19:15 2024 -0500
+
+    finally holy shat
+
+[33mcommit 79a858bcf9ddc94bc9b602596d9de20581264bed[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 16:53:22 2024 -0500
+
+    hello
+
+[33mcommit 766387cd425ffca9b3a8e5fe0e8a52d475d06151[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 16:52:42 2024 -0500
+
+    hello
+
+[33mcommit f02867432d93333b9e04db38611736fed1d378b3[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Thu Sep 12 16:51:32 2024 -0500
+
+    hello
+
+[33mcommit fecc08f4194bb31491d3d6ada9ac5fe39ba13b41[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 16:47:46 2024 -0500
+
+    kms
+
+[33mcommit be9a4169d1258eb0f4027b9233b7c1a22c06a0e2[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Thu Sep 12 16:45:41 2024 -0500
+
+    Testing
+
+[33mcommit be1163dede9b6891d6dec898d1ed4b0b05b7bda9[m
+Merge: 547493d 046ed7f
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 16:33:07 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit 046ed7f7a21d107e394c267b6eea62f4b0eacf6f[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 16:29:04 2024 -0500
+
+    restarting I hate this
+
+[33mcommit 547493d45becddf85ef25dc6851ce3e72b9d7e29[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Thu Sep 12 16:28:38 2024 -0500
+
+    testing to make sure git runs right on android studio
+
+[33mcommit 904d4002a63202f914fe8caa2fb2b8b2f34c6c6f[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 13:51:53 2024 -0500
+
+    messing around with stuff
+
+[33mcommit 66462a7d9df1f724a19acbe02b007d12b63c3a32[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 13:30:50 2024 -0500
+
+    adding pom.xml file idk why
+
+[33mcommit 9b90069b3dc3a7e147c0d82b1f5f3ae037f01db4[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 13:17:46 2024 -0500
+
+    put the files in experiments cuz vini said so
+
+[33mcommit a59628aebe2dc70700f32918bfb77718175f0d41[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Thu Sep 12 13:11:51 2024 -0500
+
+    some java files i guess
+
+[33mcommit aa18fcb03a8d57343079306faafeab05a39deb56[m
+Merge: 527b95e 0a05836
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Wed Sep 11 18:08:15 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs308/2024fall/mk_1_2
+
+[33mcommit 527b95e52fa8d9fae1aa3dd8e69cb5ee94321055[m
+Author: jrohde23 <jrohde23@iastate.edu>
+Date:   Wed Sep 11 18:08:01 2024 -0500
+
+    something
+
+[33mcommit 0a05836fbc7562055933f7cee7ba510aec30f720[m
+Author: Anish Nag <anishnag01@gmail.com>
+Date:   Wed Sep 11 18:06:09 2024 -0500
+
+    anish folder
+
+[33mcommit 6592ae4f5312e14cd66cf076440c0e0ce92601df[m
+Merge: 7ad63df 4883fc8
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Wed Sep 11 10:03:53 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit 7ad63dfd832cf727b6d5d119310a8b982a9ff04e[m
+Author: Declan Creadon <dcreadon@iastate.edu>
+Date:   Wed Sep 11 10:03:09 2024 -0500
+
+    adding my experiments folder
+
+[33mcommit 4883fc80955d71a1d3834a91dd1106425a2b2492[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Mon Sep 9 10:18:30 2024 -0500
+
+    commit
+
+[33mcommit 6b3c0dc53c66ea00a24c6e7548da171d04e0249a[m
+Merge: 05ed38c 1cea763
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Mon Sep 9 10:12:35 2024 -0500
+
+    Merge branch 'main' of https://git.las.iastate.edu/cs309/2024fall/mk_1_2
+
+[33mcommit 1cea763f496706d6acae2926aecd466a0e424635[m
+Author: unknown <dcreadon@iastate.edu>
+Date:   Fri Sep 6 10:28:04 2024 -0500
+
+    Created MY Folder
+
+[33mcommit 05ed38c9b5d80d1af4326a8777542cfb8eabbb83[m
+Author: vsoares <vinicius.malaman12@gmail.com>
+Date:   Fri Sep 6 10:22:58 2024 -0500
+
+    My experiment
+
+[33mcommit 5ed4ca59e581b3ee73682f64ccbad4abb51411aa[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:52:53 2024 +0000
+
+    Adding gitignore
+
+[33mcommit 1788500c59098b17ae3236116202c933a5d37649[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:51:51 2024 +0000
+
+    Add Documents folder
+
+[33mcommit 8278962f82ebd814262fb9b40551406e5ea9cbfb[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:51:20 2024 +0000
+
+    Adding Experiments
+
+[33mcommit 8be91400cbedf0d6015ed8937f9277452c026b5f[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:51:00 2024 +0000
+
+    Adding  Frontend
+
+[33mcommit 8e08ceab58fe0c155af43b8a760a49991e025f82[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:50:30 2024 +0000
+
+    Adding Backend
+
+[33mcommit e63f25370db07918f64d34a969568bfbfd4a9ef1[m
+Author: Md Obaidul Kabir <kabir@iastate.edu>
+Date:   Thu Aug 29 03:50:09 2024 +0000
+
+    Initial commit

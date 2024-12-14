@@ -1,0 +1,96 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IQuizRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IQuizRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IQuizRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.QuizResponse;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for QuizResponse entities.
+&nbsp; * Provides CRUD operations and methods to find quiz responses by username and to find quiz responses not associated with a specific username.
+&nbsp; */
+&nbsp;public interface IQuizRepository extends JpaRepository&lt;QuizResponse, Long&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a quiz response by the username.
+&nbsp;     *
+&nbsp;     * @param username the username associated with the quiz response
+&nbsp;     * @return an Optional containing the quiz response if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;QuizResponse&gt; findByUsername(String username);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of quiz responses not associated with the specified username.
+&nbsp;     *
+&nbsp;     * @param username the username to exclude from the search
+&nbsp;     * @return a list of quiz responses not associated with the specified username
+&nbsp;     */
+&nbsp;    List&lt;QuizResponse&gt; findByUsernameNot(String username);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

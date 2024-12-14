@@ -1,0 +1,278 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SecurityConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.config</a>
+</div>
+
+<h1>Coverage Summary for Class: SecurityConfig (mk12.config)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SecurityConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (47/47)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SecurityConfig$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">SecurityConfig$$SpringCGLIB$$1</td>
+  </tr>
+  <tr>
+    <td class="name">SecurityConfig$$SpringCGLIB$$2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (47/47)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.config;
+&nbsp;
+&nbsp;import mk12.model.JwtAuthenticationFilter;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.security.web.SecurityFilterChain;
+&nbsp;import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&nbsp;import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+&nbsp;import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+&nbsp;import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+&nbsp;import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+&nbsp;import org.springframework.web.socket.config.annotation.EnableWebSocket;
+&nbsp;import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+&nbsp;import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+&nbsp;import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+&nbsp;import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+&nbsp;import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+&nbsp;
+&nbsp;/**
+&nbsp; * Security configuration class for the application.
+&nbsp; * This class configures HTTP security, JWT authentication, and WebSocket message broker.
+&nbsp; */
+&nbsp;@Configuration
+&nbsp;@EnableWebSecurity
+&nbsp;@EnableWebSocket
+&nbsp;@EnableWebSocketMessageBroker
+&nbsp;public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
+&nbsp;
+&nbsp;    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor to initialize JwtAuthenticationFilter.
+&nbsp;     *
+&nbsp;     * @param jwtAuthenticationFilter the JWT authentication filter
+&nbsp;     */
+<b class="fc">&nbsp;    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {</b>
+<b class="fc">&nbsp;        this.jwtAuthenticationFilter = jwtAuthenticationFilter;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Configures the security filter chain.
+&nbsp;     *
+&nbsp;     * @param http the HttpSecurity object
+&nbsp;     * @param introspector the HandlerMappingIntrospector object
+&nbsp;     * @return the configured SecurityFilterChain
+&nbsp;     * @throws Exception if an error occurs during configuration
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+<b class="fc">&nbsp;        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);</b>
+&nbsp;
+<b class="fc">&nbsp;        return http</b>
+<b class="fc">&nbsp;                .csrf(csrf -&gt; csrf</b>
+<b class="fc">&nbsp;                        .ignoringRequestMatchers(</b>
+&nbsp;                                new AntPathRequestMatcher(&quot;/h2-console/**&quot;),
+&nbsp;                                new AntPathRequestMatcher(&quot;/chat/**&quot;),
+&nbsp;                                new AntPathRequestMatcher(&quot;/ws/**&quot;),
+<b class="fc">&nbsp;                                mvcMatcherBuilder.pattern(&quot;/users/signin&quot;))</b>
+<b class="fc">&nbsp;                        .disable())</b>
+<b class="fc">&nbsp;                .headers(headers -&gt; headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))</b>
+<b class="fc">&nbsp;                .cors(cors -&gt; cors.configure(http))</b>
+<b class="fc">&nbsp;                .authorizeHttpRequests(auth -&gt; auth</b>
+&nbsp;                        // Swagger UI endpoints
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/swagger-ui/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/swagger-ui.html&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/swagger-ui-custom.html&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/v3/api-docs/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/api-docs/**&quot;)).permitAll()</b>
+&nbsp;                        // Existing endpoints
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/h2-console/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/ws/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/chat/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/owners/login&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/owners/register&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(new AntPathRequestMatcher(&quot;/actuator/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/apartments/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/roommates/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/roommate-matching/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/users/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/users/signin/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/auth/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/api/reviews/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .requestMatchers(mvcMatcherBuilder.pattern(&quot;/**&quot;)).permitAll()</b>
+<b class="fc">&nbsp;                        .anyRequest().authenticated())</b>
+<b class="fc">&nbsp;                .sessionManagement(session -&gt;</b>
+<b class="fc">&nbsp;                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</b>
+<b class="fc">&nbsp;                .addFilterBefore(jwtAuthenticationFilter,</b>
+&nbsp;                        UsernamePasswordAuthenticationFilter.class)
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Bean for ServerEndpointExporter to enable WebSocket support.
+&nbsp;     *
+&nbsp;     * @return the ServerEndpointExporter bean
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public ServerEndpointExporter serverEndpointExporter() {
+<b class="fc">&nbsp;        return new ServerEndpointExporter();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Registers STOMP endpoints for WebSocket communication.
+&nbsp;     *
+&nbsp;     * @param registry the StompEndpointRegistry object
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void registerStompEndpoints(StompEndpointRegistry registry) {
+<b class="fc">&nbsp;        registry.addEndpoint(&quot;/ws&quot;)</b>
+<b class="fc">&nbsp;                .setAllowedOrigins(&quot;*&quot;)</b>
+<b class="fc">&nbsp;                .withSockJS();</b>
+&nbsp;
+<b class="fc">&nbsp;        registry.addEndpoint(&quot;/chat&quot;)</b>
+<b class="fc">&nbsp;                .setAllowedOrigins(&quot;*&quot;)</b>
+<b class="fc">&nbsp;                .withSockJS();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Configures the message broker for WebSocket communication.
+&nbsp;     *
+&nbsp;     * @param config the MessageBrokerRegistry object
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void configureMessageBroker(MessageBrokerRegistry config) {
+<b class="fc">&nbsp;        config.enableSimpleBroker(&quot;/topic&quot;, &quot;/queue&quot;, &quot;/user&quot;);</b>
+<b class="fc">&nbsp;        config.setApplicationDestinationPrefixes(&quot;/app&quot;);</b>
+<b class="fc">&nbsp;        config.setUserDestinationPrefix(&quot;/user&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Bean for PasswordEncoder to encode passwords.
+&nbsp;     *
+&nbsp;     * @return the PasswordEncoder bean
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public PasswordEncoder passwordEncoder() {
+<b class="fc">&nbsp;        return new BCryptPasswordEncoder();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Bean for AuthenticationManager to manage authentication.
+&nbsp;     *
+&nbsp;     * @param authenticationConfiguration the AuthenticationConfiguration object
+&nbsp;     * @return the AuthenticationManager bean
+&nbsp;     * @throws Exception if an error occurs during configuration
+&nbsp;     */
+&nbsp;    @Bean
+&nbsp;    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+<b class="fc">&nbsp;        return authenticationConfiguration.getAuthenticationManager();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-04 19:39</div>
+</div>
+</body>
+</html>

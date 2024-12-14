@@ -1,0 +1,278 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FriendRequestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: FriendRequestController (mk12.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FriendRequestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (4/10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.controllers;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.media.Content;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.media.ArraySchema;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+&nbsp;import mk12.model.Friend;
+&nbsp;import mk12.repository.FriendRepository;
+&nbsp;import mk12.repository.FriendRequestRepository;
+&nbsp;import mk12.service.FriendRequestService;
+&nbsp;import mk12.model.FriendRequest;
+&nbsp;import mk12.service.FriendService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * REST controller for managing friend requests.
+&nbsp; * Provides endpoints for sending, accepting, denying, and retrieving friend requests.
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/friend-requests&quot;)
+&nbsp;@Tag(name = &quot;Friend Requests&quot;,
+&nbsp;        description = &quot;APIs for managing friend requests between users&quot;)
+&nbsp;@SecurityRequirement(name = &quot;bearerAuth&quot;)  // Assumes JWT authentication
+&nbsp;public class FriendRequestController {
+&nbsp;    private final FriendService friendService;
+&nbsp;    private final FriendRequestService friendRequestService;
+&nbsp;    private final FriendRepository friendRepository;
+&nbsp;    /**
+&nbsp;     * Constructor to initialize FriendRequestService.
+&nbsp;     *
+&nbsp;     * @param friendRequestService the friend request service
+&nbsp;     */
+&nbsp;    @Autowired
+<b class="fc">&nbsp;    public FriendRequestController(FriendRequestService friendRequestService, FriendRepository friendRepository, FriendService friendService) {</b>
+<b class="fc">&nbsp;        this.friendRequestService = friendRequestService;</b>
+<b class="fc">&nbsp;        this.friendRepository = friendRepository;</b>
+<b class="fc">&nbsp;        this.friendService = friendService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Get all friend requests for a user&quot;,
+&nbsp;            description = &quot;Retrieves all incoming friend requests for the specified username&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Successfully retrieved friend requests&quot;,
+&nbsp;                    content = @Content(
+&nbsp;                            mediaType = &quot;application/json&quot;,
+&nbsp;                            array = @ArraySchema(schema = @Schema(implementation = FriendRequest.class))
+&nbsp;                    )
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;User not found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;403&quot;,
+&nbsp;                    description = &quot;Unauthorized access&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @GetMapping(&quot;/{username}&quot;)
+&nbsp;    public List&lt;FriendRequest&gt; getAllFriendRequests(
+&nbsp;            @Parameter(description = &quot;Username of the user to get friend requests for&quot;,
+&nbsp;                    required = true,
+&nbsp;                    example = &quot;john_doe&quot;)
+&nbsp;            @PathVariable String username) {
+<b class="nc">&nbsp;        return friendRequestService.getAllFriendRequests(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Send a friend request&quot;,
+&nbsp;            description = &quot;Sends a friend request from one user to another&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Friend request sent successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = FriendRequest.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid request (e.g., sending to self, already friends)&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;User not found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;409&quot;,
+&nbsp;                    description = &quot;Friend request already exists&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @PostMapping
+&nbsp;    public FriendRequest sendFriendRequest(
+&nbsp;            @Parameter(description = &quot;Friend request details&quot;,
+&nbsp;                    required = true)
+&nbsp;            @RequestBody FriendRequestPayload payload) {
+<b class="nc">&nbsp;        return friendRequestService.sendFriendRequest(payload.getSenderUsername(),</b>
+<b class="nc">&nbsp;                payload.getReceiverUsername());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Accept a friend request&quot;,
+&nbsp;            description = &quot;Accepts a pending friend request from the specified user&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Friend request accepted successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = FriendRequest.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;Friend request not found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid request state&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @PutMapping(&quot;/{sender}/{receiver}/accept&quot;)
+&nbsp;    public FriendRequest acceptFriendRequest(
+&nbsp;            @Parameter(description = &quot;Username of the friend request sender&quot;,
+&nbsp;                    required = true,
+&nbsp;                    example = &quot;jrohde23&quot;)
+&nbsp;            @PathVariable String sender, @PathVariable String receiver) {
+<b class="nc">&nbsp;        return friendRequestService.acceptFriendRequestByUsername(sender, receiver);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(summary = &quot;Deny a friend request&quot;,
+&nbsp;            description = &quot;Denies a pending friend request from the specified user&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;200&quot;,
+&nbsp;                    description = &quot;Friend request denied successfully&quot;,
+&nbsp;                    content = @Content(schema = @Schema(implementation = FriendRequest.class))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;404&quot;,
+&nbsp;                    description = &quot;Friend request not found&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            ),
+&nbsp;            @ApiResponse(
+&nbsp;                    responseCode = &quot;400&quot;,
+&nbsp;                    description = &quot;Invalid request state&quot;,
+&nbsp;                    content = @Content(schema = @Schema(type = &quot;string&quot;))
+&nbsp;            )
+&nbsp;    })
+&nbsp;    @PutMapping(&quot;/{username}/deny&quot;)
+&nbsp;    public FriendRequest denyFriendRequest(
+&nbsp;            @Parameter(description = &quot;Username of the friend request sender&quot;,
+&nbsp;                    required = true,
+&nbsp;                    example = &quot;jane_doe&quot;)
+&nbsp;            @PathVariable String username) {
+<b class="nc">&nbsp;        return friendRequestService.denyFriendRequestByUsername(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{username}/listFriendsByUsername&quot;)
+&nbsp;    public List&lt;Friend&gt; listFriendsByUsername(@PathVariable String username) {
+<b class="nc">&nbsp;        return friendService.listFriendsByUsername(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    }
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>

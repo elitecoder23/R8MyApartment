@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".MainActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#E62929">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CYFINDER"
+        android:layout_gravity="center"
+        android:textSize="50dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:textColor="#F6E11E">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please Enter Your Credentials Below"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="75dp"
+        android:textSize="35dp"
+        android:textColor="#000080"
+        android:fontFamily="monospace"
+        android:textStyle="bold">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username: "
+            android:textSize="35dp"
+            android:textColor="#F6E11E"
+            android:fontFamily="monospace"
+            android:textStyle="bold">
+        </TextView>
+
+        <EditText
+            android:id="@+id/login_username_edt"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:hint="Enter Username Here">
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password: "
+            android:textSize="35dp"
+            android:textColor="#F6E11E"
+            android:fontFamily="monospace"
+            android:textStyle="bold">
+        </TextView>
+
+        <EditText
+            android:id="@+id/login_password_edt"
+            android:layout_width="wrap_content"
+            android:inputType="textPassword"
+            android:layout_height="50dp"
+            android:hint="Enter Password Here">
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/login_login_btn"
+            android:layout_width="172dp"
+            android:layout_height="105dp"
+            android:layout_marginRight="10dp"
+            android:text="Login"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:backgroundTint= "#000080"
+            android:textStyle="italic"/>
+
+        <Button
+            android:id="@+id/login_signup_btn"
+            android:layout_width="163dp"
+            android:layout_height="106dp"
+            android:layout_marginLeft="10dp"
+            android:text="Signup"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:backgroundTint= "#000080"
+            android:textStyle="italic">
+        </Button>
+
+
+
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,115 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IApartmentRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">mk12.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: IApartmentRepository (mk12.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IApartmentRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package mk12.repository;
+&nbsp;
+&nbsp;import mk12.model.Apartment;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for Apartment entities.
+&nbsp; * Provides CRUD operations and methods to find apartments by owner ID, name, and owner name.
+&nbsp; * Also provides a method to delete an apartment by its name.
+&nbsp; */
+&nbsp;@Repository
+&nbsp;public interface IApartmentRepository extends JpaRepository&lt;Apartment, Long&gt; {
+&nbsp;    /**
+&nbsp;     * Finds a list of apartments by the owner&#39;s ID.
+&nbsp;     *
+&nbsp;     * @param ownerId the ID of the owner
+&nbsp;     * @return a list of apartments owned by the specified owner ID
+&nbsp;     */
+&nbsp;    List&lt;Apartment&gt; findByOwnerId(Long ownerId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds an apartment by its name.
+&nbsp;     *
+&nbsp;     * @param name the name of the apartment
+&nbsp;     * @return an Optional containing the apartment if found, or empty if not found
+&nbsp;     */
+&nbsp;    Optional&lt;Apartment&gt; findByName(String name);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a list of apartments by the owner&#39;s name.
+&nbsp;     *
+&nbsp;     * @param ownerName the name of the owner
+&nbsp;     * @return a list of apartments owned by the specified owner name
+&nbsp;     */
+&nbsp;    List&lt;Apartment&gt; findByOwnerName(String ownerName);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes an apartment by its name.
+&nbsp;     *
+&nbsp;     * @param name the name of the apartment to be deleted
+&nbsp;     */
+&nbsp;    void deleteByName(String name);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-11 17:35</div>
+</div>
+</body>
+</html>
